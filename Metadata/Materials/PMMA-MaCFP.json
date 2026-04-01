@@ -1,25 +1,28 @@
 {
-    "Common Names": ["Ipe", "Brazilian Walnut"],
-    "Material ID": "Ipe",
+    "Common Names": [
+        "poly(methyl methacrylate)",
+        "Acrylic"
+    ],
+    "Material ID": "PMMA",
     "CAS Number": null,
-    "Trade Name": null,
+    "Trade Name": "Acrylite cast black 9H01 GT",
     "Model Number": null,
-    "Manufacturer": null,
+    "Manufacturer": "Evonik",
     "Country of Origin": null,
-    "Distributor / Harvesting Site": "The Hardwood Store of NC, Inc",
-    "Date Acquired": null,
+    "Distributor / Harvesting Site": "Acrylate.co",
+    "Date Acquired": "March 2019",
     "Description": {
-        "Color": "Dark tan to brown color",
+        "Color": "black PMMA",
         "Shape": null,
         "Finish": null,
-        "Form": null,
-        "Thickness": null,
-        "Notes": null
+        "Form": "Acrylic Sheet",
+        "Thickness": "5.3-6.25mm",
+        "Notes": "Cell-cast"
     },
     "Categories": {
-        "Synthetic/ Natural/ Vegetation": "Vegetation",
-        "Copolymer/ Homopolymer/ Composite": null,
-        "Thermoset/ Thermoplastic": null,
+        "Synthetic/ Natural/ Vegetation": "Synthetic Polymer",
+        "Copolymer/ Homopolymer/ Composite": "Homopolymer",
+        "Thermoset/ Thermoplastic": "Thermoplastic",
         "Additives": {
             "Plasticizers": {
                 "Name": null,

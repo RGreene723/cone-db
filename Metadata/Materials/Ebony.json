@@ -17,7 +17,7 @@
         "Notes": null
     },
     "Categories": {
-        "Synthetic/ Natural/ Vegetation": null,
+        "Synthetic/ Natural/ Vegetation": "Vegetation",
         "Copolymer/ Homopolymer/ Composite": null,
         "Thermoset/ Thermoplastic": null,
         "Additives": {

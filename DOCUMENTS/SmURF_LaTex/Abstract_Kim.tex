@@ -1,0 +1,42 @@
+\documentclass{abstract}
+
+% Bibliography
+\usepackage[
+    backend=biber,
+    style=authoryear,
+    doi=true,
+    sorting=none,
+    sortcites=true,
+    maxbibnames=2,
+    minbibnames=1,
+    maxcitenames=2,
+    mincitenames=1,
+    citestyle=numeric-comp,
+    giveninits=true,
+    isbn=false,
+    date=year
+]{biblatex}
+\addbibresource{abstract.bib}
+
+% For email linking
+\usepackage{hyperref}
+
+\title{Effect of heat flux on combustion of different wood species}
+
+\author{Ian Kim},
+
+\keywords{}
+\begin{document}
+\maketitle
+\section{Abstract}
+The main point of this NIST research effort is to look at the cone calorimetry, which is the standard instrument for large-scale fire testing used to measure the flammability of materials by measuring the heat release rate (HRR) from the smoke and oxygen emitted. And from 1982-1991, NIST conducted over 1000+ cone calorimetry tests looking at the heat release rate of different materials. However, these tests were either handwritten or scattered across different databases. 
+
+Therefore, our mission this spring with the ENFP 429 research class is to scan, review, and centralize this data so that anyone in the world can see how heat release changes from different materials and apply our data to future burn tests and fire protection systems. 
+
+Example citation \cite{babrauskas1982development, brown1988cone,emil1989flammability}
+
+
+\section{References}
+\printbibliography[heading=none]
+
+\end{document}

@@ -1,5 +1,5 @@
 {
-    "python.defaultInterpreterPath": "C:\\Users\\rtg4\\Documents\\GitHub\\NIST-FRG\\cone-db\\venv\\bin\\python",
+    "python.defaultInterpreterPath": "C:*****Root\\To\\ConeDB****\\cone-db\\venv\\bin\\python",
     "python.linting.enabled": true,
     "python.formatting.provider": "black",
     "editor.formatOnSave": true,

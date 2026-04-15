@@ -31,7 +31,80 @@ def normalize_path(path_string):
     if path_string is None:
         return Path(".")
     return Path(path_string.replace("\\", "/"))
+def safe_savgol_filter(
+    data: np.ndarray,
+    window_length: int,
+    polyorder: int,
+    deriv: int,
+    delta: float,
+) -> np.ndarray:
+    """
+    Apply Savitzky-Golay filter handling NaN values.
 
+    - If NaNs are only at the beginning or end, filter the valid chunk
+    - If NaNs are in the middle, interpolate, filter, then restore NaNs
+    """
+    nan_mask = np.isnan(data)
+
+    if not nan_mask.any():
+        return savgol_filter(
+            data,
+            window_length=window_length,
+            polyorder=polyorder,
+            deriv=deriv,
+            delta=delta,
+        )
+
+    if nan_mask.all():
+        return np.full_like(data, np.nan)
+
+    valid_indices = np.where(~nan_mask)[0]
+    first_valid = valid_indices[0]
+    last_valid = valid_indices[-1]
+
+    middle_section = data[first_valid : last_valid + 1]
+    middle_nan_mask = np.isnan(middle_section)
+
+    if not middle_nan_mask.any():
+        result = np.full_like(data, np.nan)
+        if len(middle_section) >= window_length:
+            filtered_middle = savgol_filter(
+                middle_section,
+                window_length=window_length,
+                polyorder=polyorder,
+                deriv=deriv,
+                delta=delta,
+            )
+            result[first_valid : last_valid + 1] = filtered_middle
+        else:
+            result[first_valid : last_valid + 1] = np.gradient(middle_section, delta)
+        return result
+    else:
+        result = np.full_like(data, np.nan)
+        data_interp = data.copy()
+        valid_mask = ~nan_mask
+        x_valid = np.where(valid_mask)[0]
+        y_valid = data[valid_mask]
+        x_interp = np.arange(first_valid, last_valid + 1)
+        data_interp[first_valid : last_valid + 1] = np.interp(
+            x_interp, x_valid, y_valid
+        )
+        middle_interp = data_interp[first_valid : last_valid + 1]
+
+        if len(middle_interp) >= window_length:
+            filtered_middle = savgol_filter(
+                middle_interp,
+                window_length=window_length,
+                polyorder=polyorder,
+                deriv=deriv,
+                delta=delta,
+            )
+        else:
+            filtered_middle = np.gradient(middle_interp, delta)
+
+        result[first_valid : last_valid + 1] = filtered_middle
+        result[nan_mask] = np.nan
+        return result
 
 ################################ Title of Page #####################################################
 st.set_page_config(page_title="SmURF Editor", page_icon="📊", layout="wide")
@@ -249,7 +322,14 @@ if test_selection:
         data['MLRPUA (g/s-m2)'] = None
     
     if not data["Mass (g)"].isnull().all():
-        data['MLR (g/s)'] = savgol_filter((-1)*np.gradient(data['Mass (g)'],data['Time (s)']),53,3)
+        dm_dt = safe_savgol_filter(
+                            data["Mass (g)"].values,
+                            window_length=int(0.08*len(data)) if len(data) >= 50 else 3,  # Adjust window length based on data size, minimum of 3
+                            polyorder=2,
+                            deriv=1,
+                            delta=data['Time (s)'].diff().median(),
+                        )# Parameters for savgol filter based on Staggs paper
+        data['MLR (g/s)'] = (-1)*dm_dt
         data["MLRPUA (g/s-m2)"] = data["MLR (g/s)"] / surf_area if surf_area is not None else None 
         data["MassPUA (g/m2)"] = data["Mass (g)"] / surf_area if surf_area is not None else None
         data['Mass Loss (g)'] = mass - data["Mass (g)"] if mass is not None else None

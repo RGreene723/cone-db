@@ -1,11 +1,11 @@
 {
-    "Material ID": "Upholstery-PUFoam-Cotton-Babrauskas1985UpholsteredV1",
-    "Material Name": "COTTON/N-CA",
-    "Sample Mass (g)": 32.0,
+    "Material ID": "Upholstery-PUFoam-Polyolefin-Babrauskas1985Upholstered",
+    "Material Name": "POLYOLEFIN/N-CA",
+    "Sample Mass (g)": 24.2,
     "Residual Mass (g)": null,
     "Replicate": 1,
-    "Original Testname": "test0112_0609_001",
-    "Testname": "Upholstery-PUFoam-Cotton-Babrauskas1985UpholsteredV1_25kW_hor_R1",
+    "Original Testname": "test0121_0606_001",
+    "Testname": "Upholstery-PUFoam-Polyolefin-Babrauskas1985Upholstered_30kW_hor_R1",
     "Thickness (mm)": 50.0,
     "Sample Description": null,
     "Specimen Prep": null,
@@ -22,13 +22,13 @@
     "Parsed": "2026-04-06 14:43:02",
     "Auto Prepared": null,
     "Manually Prepared": null,
-    "SmURF": "2026-04-21 20:32:26",
+    "SmURF": "2026-04-21 20:30:52",
     "Bad Data": null,
     "Autoprocessed": null,
     "Manually Reviewed Series": null,
     "Pass Review": null,
     "Published": null,
-    "Heat Flux (kW/m2)": 25,
+    "Heat Flux (kW/m2)": 30,
     "Orientation": "HORIZONTAL",
     "C Factor": null,
     "Surface Area (m2)": 0.01,
@@ -99,7 +99,7 @@
     "t_flameout (s)": null,
     "t_flameout Outlier": null,
     "Comments": [
-        "COTTON/N-CA HORIZONTAL 2.5W/CM2 32.0% 8/18/82-112 (CAL.CONST. 136748.)"
+        "POLYOLEFIN/N-CA HORIZONTAL 3.0W/CM2 24.2s 8/18/82-121 (CAL.CONST. 136748.)"
     ],
     "Data Corrections": []
 }

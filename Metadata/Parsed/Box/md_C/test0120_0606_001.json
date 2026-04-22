@@ -1,11 +1,11 @@
 {
-    "Material ID": "Upholstery-PUFoam-Cotton-Babrauskas1985UpholsteredV1",
-    "Material Name": "COTTON/N-CA",
-    "Sample Mass (g)": 32.0,
+    "Material ID": "Upholstery-CottonBatting-Cotton-Babrauskas1985Upholstered",
+    "Material Name": "COTTON/N-FR BATTING ",
+    "Sample Mass (g)": 36.0,
     "Residual Mass (g)": null,
     "Replicate": 1,
-    "Original Testname": "test0112_0609_001",
-    "Testname": "Upholstery-PUFoam-Cotton-Babrauskas1985UpholsteredV1_25kW_hor_R1",
+    "Original Testname": "test0120_0606_001",
+    "Testname": "Upholstery-CottonBatting-Cotton-Babrauskas1985Upholstered_30kW_hor_R1",
     "Thickness (mm)": 50.0,
     "Sample Description": null,
     "Specimen Prep": null,
@@ -19,16 +19,16 @@
     "Report Name": null,
     "Original Source": "Box/md_C",
     "Preparsed": "2026-02-06 15:46:18",
-    "Parsed": "2026-04-06 14:43:02",
+    "Parsed": "2026-04-06 14:43:03",
     "Auto Prepared": null,
     "Manually Prepared": null,
-    "SmURF": "2026-04-21 20:32:26",
+    "SmURF": "2026-04-21 20:34:24",
     "Bad Data": null,
     "Autoprocessed": null,
     "Manually Reviewed Series": null,
     "Pass Review": null,
     "Published": null,
-    "Heat Flux (kW/m2)": 25,
+    "Heat Flux (kW/m2)": 30,
     "Orientation": "HORIZONTAL",
     "C Factor": null,
     "Surface Area (m2)": 0.01,
@@ -99,7 +99,8 @@
     "t_flameout (s)": null,
     "t_flameout Outlier": null,
     "Comments": [
-        "COTTON/N-CA HORIZONTAL 2.5W/CM2 32.0% 8/18/82-112 (CAL.CONST. 136748.)"
+        "COTTON/N-FR BATTING  HORIZONTAL  3.0W/CM2  36.0%  8/18/82-120 (CAL.CONST. 1367)",
+        "136748"
     ],
     "Data Corrections": []
 }

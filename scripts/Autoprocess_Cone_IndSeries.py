@@ -29,7 +29,80 @@ from utils import colorize
 warnings.simplefilter(action='ignore', category=FutureWarning)
 warnings.simplefilter(action='ignore', category=pd.errors.SettingWithCopyWarning)
 
+def safe_savgol_filter(
+    data: np.ndarray,
+    window_length: int,
+    polyorder: int,
+    deriv: int,
+    delta: float,
+) -> np.ndarray:
+    """
+    Apply Savitzky-Golay filter handling NaN values.
 
+    - If NaNs are only at the beginning or end, filter the valid chunk
+    - If NaNs are in the middle, interpolate, filter, then restore NaNs
+    """
+    nan_mask = np.isnan(data)
+
+    if not nan_mask.any():
+        return savgol_filter(
+            data,
+            window_length=window_length,
+            polyorder=polyorder,
+            deriv=deriv,
+            delta=delta,
+        )
+
+    if nan_mask.all():
+        return np.full_like(data, np.nan)
+
+    valid_indices = np.where(~nan_mask)[0]
+    first_valid = valid_indices[0]
+    last_valid = valid_indices[-1]
+
+    middle_section = data[first_valid : last_valid + 1]
+    middle_nan_mask = np.isnan(middle_section)
+
+    if not middle_nan_mask.any():
+        result = np.full_like(data, np.nan)
+        if len(middle_section) >= window_length:
+            filtered_middle = savgol_filter(
+                middle_section,
+                window_length=window_length,
+                polyorder=polyorder,
+                deriv=deriv,
+                delta=delta,
+            )
+            result[first_valid : last_valid + 1] = filtered_middle
+        else:
+            result[first_valid : last_valid + 1] = np.gradient(middle_section, delta)
+        return result
+    else:
+        result = np.full_like(data, np.nan)
+        data_interp = data.copy()
+        valid_mask = ~nan_mask
+        x_valid = np.where(valid_mask)[0]
+        y_valid = data[valid_mask]
+        x_interp = np.arange(first_valid, last_valid + 1)
+        data_interp[first_valid : last_valid + 1] = np.interp(
+            x_interp, x_valid, y_valid
+        )
+        middle_interp = data_interp[first_valid : last_valid + 1]
+
+        if len(middle_interp) >= window_length:
+            filtered_middle = savgol_filter(
+                middle_interp,
+                window_length=window_length,
+                polyorder=polyorder,
+                deriv=deriv,
+                delta=delta,
+            )
+        else:
+            filtered_middle = np.gradient(middle_interp, delta)
+
+        result[first_valid : last_valid + 1] = filtered_middle
+        result[nan_mask] = np.nan
+        return result
 def average_cone_series(series_name: str, data_dir: Path, metadata_dir: Path, matl_dir: Path):                                                    
 
     paths = list(data_dir.rglob(f"{series_name}_[rR]*.csv"))
@@ -120,19 +193,14 @@ def average_cone_series(series_name: str, data_dir: Path, metadata_dir: Path, ma
         
         #Mass and MLR calculations
         if not df["Mass (g)"].isnull().all():
-            m = df["Mass (g)"]
-            for j in range(len(df)):
-                if j == 0:
-                    df.loc[j,"MLR (g/s)"] = (25*m[0] - 48*m[1] + 36*m[2] - 16*m[3] + 3*m[4])/(12*df['dt'].iloc[j])
-                elif j == 1:
-                    df.loc[j,"MLR (g/s)"] = (3*m[0] + 10*m[1] - 18*m[2] + 6*m[3] - m[4])/(12*df['dt'].iloc[j])
-                elif j == len(df)-2:
-                    df.loc[j,"MLR (g/s)"] = (-3*m[j+1] - 10*m[j] + 18*m[j-1] - 6*m[j-2] + m[j-3])/(12*df['dt'].iloc[j])
-                elif j == len(df)-1:
-                    df.loc[j,"MLR (g/s)"] = (-25*m[j] + 48*m[j-1] - 36*m[j-2] + 16*m[j-3] - 3*m[j-4])/(12*df['dt'].iloc[j])
-                else:
-                    df.loc[j,"MLR (g/s)"] = (-m[j-2]+ 8*m[j-1]- 8*m[j+1]+m[j+2])/(12*df['dt'].iloc[j])
-                    
+            dm_dt = safe_savgol_filter(
+                                df["Mass (g)"].values,
+                                window_length=int(0.08*len(df)) if len(df) >= 50 else 3,  # Adjust window length based on data size, minimum of 3
+                                polyorder=2,
+                                deriv=1,
+                                delta=df['Time (s)'].diff().median(),
+                            )# Parameters for savgol filter based on Staggs paper
+            df['MLR (g/s)'] = (-1)*dm_dt
             df['Mass Loss (g)'] = sample_mass - df['Mass (g)']
             df['Mass LossPUA (g/m2)'] = df['Mass Loss (g)'] / sa if sa else None
             df['MLRPUA (g/s-m2)'] = df['MLR (g/s)'] / sa if sa else None
@@ -161,8 +229,7 @@ def average_cone_series(series_name: str, data_dir: Path, metadata_dir: Path, ma
             df['Mass Loss (g)'] = None
             df['Mass LossPUA (g/m2)'] = None
             df['MLRPUA (g/s-m2)'] =  None
-        
-
+    
 
         #Heat Release Calculations
         if "HRRPUA (kW/m2)" not in df.columns:
@@ -237,7 +304,7 @@ def average_cone_series(series_name: str, data_dir: Path, metadata_dir: Path, ma
     #------------------------------------------------------  
     # Statistics and outliers
     #------------------------------------------------------ 
-    if N_exp >= 3:
+    if N_exp >= 2:
         print(colorize(f"{N_exp} good tests found, performing statistical analysis", "green"))
         HRR_out = ph.outlier(merged_HRRPUA, Average_HRRPUA, Std_HRRPUA)
         Output_file = str(Folder /series_name)+'_Average.csv'
@@ -453,7 +520,7 @@ def average_cone_series(series_name: str, data_dir: Path, metadata_dir: Path, ma
     df_values.loc['uncertainty'] = [0] * df_values.shape[1]
     for key in columns:
         df_values[key]['outlier',]  = ph.parameter_outliers(df_values[key][:-4], df_values[key]['mean'], df_values[key]['std'])
-        df_values[key]['uncertainty'] = np.sqrt((df_values[key]['std']/df_values[key]['mean'])**2)*df_values[key]['mean'] if df_values[key]['mean'] !=0 else 0
+        df_values[key]['uncertainty'] = 2*np.sqrt((df_values[key]['std']/df_values[key]['mean'])**2)*df_values[key]['mean'] if df_values[key]['mean'] !=0 else 0
     # Match column names with metadata entries
     df_values = df_values.rename(columns={
                                 't_ign': "t_ignition (s)",    
@@ -495,7 +562,7 @@ def average_cone_series(series_name: str, data_dir: Path, metadata_dir: Path, ma
             matl_data = json.load(f)
         matl_data.update({series_name:{}})
 
-        if N_exp >=3:
+        if N_exp >= 2:
             testlist = []
             for path in paths:
                 testlist.append(path.stem)

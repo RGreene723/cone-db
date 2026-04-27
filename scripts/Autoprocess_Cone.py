@@ -80,8 +80,8 @@ if __name__ == "__main__":
                 if not check.get("Autoprocessed"):
                     noauto_count += 1
                     
-                if check.get("Manually Reviewed Series"):
-                    if check["Manually Reviewed Series"] > check.get("Autoprocessed", "") and check.get('Pass Review'):
+                if check.get("Manually Reviewed Series"):   
+                    if (check.get("Manually Reviewed Series") or "") > (check.get("Autoprocessed") or "") and check.get('Pass Review'):
                         new_manual_review_count += 1
                         
             except (json.JSONDecodeError, KeyError) as e:

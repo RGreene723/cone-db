@@ -8,6 +8,7 @@ import sys
 import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
+from scipy.signal import savgol_filter
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]  # .../Scripts
 
@@ -27,7 +28,80 @@ st.set_page_config(page_title="Cone Data Viewer", page_icon="📈", layout="wide
 
 st.title("Cone Data Viewer")
 #####################################################################################################
+def safe_savgol_filter(
+    data: np.ndarray,
+    window_length: int,
+    polyorder: int,
+    deriv: int,
+    delta: float,
+) -> np.ndarray:
+    """
+    Apply Savitzky-Golay filter handling NaN values.
 
+    - If NaNs are only at the beginning or end, filter the valid chunk
+    - If NaNs are in the middle, interpolate, filter, then restore NaNs
+    """
+    nan_mask = np.isnan(data)
+
+    if not nan_mask.any():
+        return savgol_filter(
+            data,
+            window_length=window_length,
+            polyorder=polyorder,
+            deriv=deriv,
+            delta=delta,
+        )
+
+    if nan_mask.all():
+        return np.full_like(data, np.nan)
+
+    valid_indices = np.where(~nan_mask)[0]
+    first_valid = valid_indices[0]
+    last_valid = valid_indices[-1]
+
+    middle_section = data[first_valid : last_valid + 1]
+    middle_nan_mask = np.isnan(middle_section)
+
+    if not middle_nan_mask.any():
+        result = np.full_like(data, np.nan)
+        if len(middle_section) >= window_length:
+            filtered_middle = savgol_filter(
+                middle_section,
+                window_length=window_length,
+                polyorder=polyorder,
+                deriv=deriv,
+                delta=delta,
+            )
+            result[first_valid : last_valid + 1] = filtered_middle
+        else:
+            result[first_valid : last_valid + 1] = np.gradient(middle_section, delta)
+        return result
+    else:
+        result = np.full_like(data, np.nan)
+        data_interp = data.copy()
+        valid_mask = ~nan_mask
+        x_valid = np.where(valid_mask)[0]
+        y_valid = data[valid_mask]
+        x_interp = np.arange(first_valid, last_valid + 1)
+        data_interp[first_valid : last_valid + 1] = np.interp(
+            x_interp, x_valid, y_valid
+        )
+        middle_interp = data_interp[first_valid : last_valid + 1]
+
+        if len(middle_interp) >= window_length:
+            filtered_middle = savgol_filter(
+                middle_interp,
+                window_length=window_length,
+                polyorder=polyorder,
+                deriv=deriv,
+                delta=delta,
+            )
+        else:
+            filtered_middle = np.gradient(middle_interp, delta)
+
+        result[first_valid : last_valid + 1] = filtered_middle
+        result[nan_mask] = np.nan
+        return result
 ################### Get test files, select by material, then material id, then test #################
 
 st.write("Select the test status you would like to view")
@@ -225,39 +299,27 @@ try:
                     data['MLRPUA (g/s-m2)'] = None
                 
                 if not data["Mass (g)"].isnull().all():
-                    data['MLR (g/s)'] = None
-                    m = data["Mass (g)"]
-                    for i in range(len(data)):
-                        if i == 0:
-                            data.loc[i,"MLR (g/s)"] = (25*m[0] - 48*m[1] + 36*m[2] - 16*m[3] + 3*m[4])/(12*data['dt'].iloc[i])
-                        elif i == 1:
-                            data.loc[i,"MLR (g/s)"] = (3*m[0] + 10*m[1] - 18*m[2] + 6*m[3] - m[4])/(12*data['dt'].iloc[i])
-                        elif i ==len(data) -2:
-                            data.loc[i,"MLR (g/s)"] = (-3*m[i+1] - 10*m[i] + 18*m[i-1] - 6*m[i-2] + m[i-3])/(12*data['dt'].iloc[i])
-                        elif i == len(data)-1:
-                            data.loc[i,"MLR (g/s)"] = (-25*m[i] + 48*m[i-1] - 36*m[i-2] + 16*m[i-3] - 3*m[i-4])/(12*data['dt'].iloc[i])
-                        else:
-                            data.loc[i,"MLR (g/s)"] = (-m[i-2]+ 8*m[i-1]- 8*m[i+1]+m[i+2])/(12*data['dt'].iloc[i])
-
+                    dm_dt = safe_savgol_filter(
+                            data["Mass (g)"].values,
+                            window_length=int(0.08*len(data)) if len(data) >= 50 else 3,  # Adjust window length based on data size, minimum of 3
+                            polyorder=2,
+                            deriv=1,
+                            delta=data['Time (s)'].diff().median(),
+                        )
+                    data['MLR (g/s)'] = (-1)*dm_dt
                     data["MLRPUA (g/s-m2)"] = data["MLR (g/s)"] / surf_area if surf_area is not None else None 
                     data["MassPUA (g/m2)"] = data["Mass (g)"]  / surf_area if surf_area is not None else None
                     data['Mass Loss (g)'] = mass - data["Mass (g)"] if mass is not None else None
                     data['Mass LossPUA (g/m2)'] = (mass / surf_area) - data["MassPUA (g/m2)"] if mass is not None and surf_area is not None else None
                 elif not data['MassPUA (g/m2)'].isnull().all():
-                    data['MLRPUA (g/s-m2)'] = None
-                    m = data["MassPUA (g/m2)"]
-                    for i in range(len(data)):
-                        if i == 0:
-                            data.loc[i,"MLRPUA (g/s-m2)"] = (25*m[0] - 48*m[1] + 36*m[2] - 16*m[3] + 3*m[4])/(12*data['dt'].iloc[i])
-                        elif i == 1:
-                            data.loc[i,"MLRPUA (g/s-m2)"] = (3*m[0] + 10*m[1] - 18*m[2] + 6*m[3] - m[4])/(12*data['dt'].iloc[i])
-                        elif i ==len(data) -2:
-                            data.loc[i,"MLRPUA (g/s-m2)"] = (-3*m[i+1] - 10*m[i] + 18*m[i-1] - 6*m[i-2] + m[i-3])/(12*data['dt'].iloc[i])
-                        elif i == len(data)-1:
-                            data.loc[i,"MLRPUA (g/s-m2)"] = (-25*m[i] + 48*m[i-1] - 36*m[i-2] + 16*m[i-3] - 3*m[i-4])/(12*data['dt'].iloc[i])
-                        else:
-                            data.loc[i,"MLRPUA (g/s-m2)"] = (-m[i-2]+ 8*m[i-1]- 8*m[i+1]+m[i+2])/(12*data['dt'].iloc[i])
-
+                    dm_dt = safe_savgol_filter(
+                            data["MassPUA (g/m2)"].values,
+                            window_length=int(0.08*len(data)) if len(data) >= 50 else 3,  # Adjust window length based on data size, minimum of 3
+                            polyorder=2,
+                            deriv=1,
+                            delta=data['Time (s)'].diff().median(),
+                        )
+                    data['MLRPUA (g/s-m2)'] = (-1)*dm_dt
                     data["MLR (g/s)"] = data["MLRPUA (g/s-m2)"] * surf_area if surf_area is not None else None 
                     data["Mass (g)"] = data["MassPUA (g/m2)"] * surf_area if surf_area is not None else None
                     data['Mass Loss (g)'] = mass - data["Mass (g)"] if mass is not None else None

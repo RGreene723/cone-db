@@ -130,6 +130,7 @@ if st.button("Import Data To Explorer"):
         bad = metadata.get("Bad Data")
         prepared_name = metadata.get("Testname")
         ogform = metadata["Original Source"]
+        folder = ogform.split("/")[0]
         if "FTT" in ogform:
             parse_script = "Parse_Cone-FTT.py"
         elif "md_A" in ogform:
@@ -144,7 +145,7 @@ if st.button("Import Data To Explorer"):
         print(parsed_csv_file)
         prepared_csv_file = prepared_name + ".csv" if prepared_name else None
         if prepared_csv_file:
-            src_csv_path = PREPARED_DATA_PATH / ogform /prepared_csv_file
+            src_csv_path = PREPARED_DATA_PATH / folder /prepared_csv_file
         else:
             src_csv_path = PARSED_DATA_PATH / ogform /parsed_csv_file
 
@@ -335,7 +336,14 @@ if test_selection:
         data['Mass Loss (g)'] = mass - data["Mass (g)"] if mass is not None else None
         data['Mass LossPUA (g/m2)'] = (mass / surf_area) - data["MassPUA (g/m2)"] if mass is not None and surf_area is not None else None
     elif not data['MassPUA (g/m2)'].isnull().all():
-        data['MLRPUA (g/s-m2)'] = data['MLR (g/s)'] = savgol_filter((-1)*np.gradient(data['MassPUA (g/m2)'],data['Time (s)']),53,3)
+        dm_dt = safe_savgol_filter(
+                            data["MassPUA (g/m2)"].values,
+                            window_length=int(0.08*len(data)) if len(data) >= 50 else 3,  # Adjust window length based on data size, minimum of 3
+                            polyorder=2,
+                            deriv=1,
+                            delta=data['Time (s)'].diff().median(),
+                        )
+        data['MLRPUA (g/s-m2)'] = (-1)*dm_dt
         data["MLR (g/s)"] = data["MLRPUA (g/s-m2)"] * surf_area if surf_area is not None else None 
         data["Mass (g)"] = data["MassPUA (g/m2)"] * surf_area if surf_area is not None else None
         data['Mass Loss (g)'] = mass - data["Mass (g)"] if mass is not None else None
@@ -772,6 +780,7 @@ def export_metadata(edited_df, original_metadata):
         return
     
     ogform = metadata["Original Source"]
+    folder = ogform.split("/")[0]
     ogform_path = normalize_path(ogform)
     
     date = metadata["Test Date"]
@@ -799,8 +808,8 @@ def export_metadata(edited_df, original_metadata):
     metadata['Test Date'] = dt_obj.strftime("%Y-%m-%d")
     
     parsed_path = PARSED_METADATA_PATH / ogform_path
-    prepared_path = PREPARED_METADATA_PATH / ogform_path
-    prepared_data_path = PREPARED_DATA_PATH / ogform_path
+    prepared_path = PREPARED_METADATA_PATH / folder
+    prepared_data_path = PREPARED_DATA_PATH / folder
     
     if not prepared_path.exists():
         prepared_path.mkdir(parents=True, exist_ok=True)
@@ -811,16 +820,17 @@ def export_metadata(edited_df, original_metadata):
     
     filename_parts = [
         material_id,
+        "Cone",
         f"{int(metadata['Heat Flux (kW/m2)'])}kW",
-        "vert" if "VERT" in metadata["Orientation"].upper() else "hor" if  "HOR" in metadata["Orientation"].upper() else "unkn",
+        "vert" if "VERT" in metadata["Orientation"].upper() else "hor" if "HOR" in metadata["Orientation"].upper() else "unkn",
     ]
-    if "unkn" in filename_parts[2]:
+    if "unkn" in filename_parts[3]:
         st.warning(f"Export Aborted: Unrecognized Orientation: {metadata['Orientation']}. Please specify an orientation containing 'vert' or 'hor'")
         return
 
     if metadata.get("Replicate") is not None and metadata.get("Replicate") != "":
-        filename_parts.insert(3, f"R{metadata['Replicate']}")
-    
+        filename_parts.insert(4, f"R{metadata['Replicate']}")
+
     new_filename = "_".join(filename_parts) + ".json"
     old_filename = metadata["Original Testname"] + '.json'
     

@@ -19,7 +19,80 @@ from Cone_Explorer.const import (
     SCRIPT_DIR
 )
 
+def safe_savgol_filter(
+    data: np.ndarray,
+    window_length: int,
+    polyorder: int,
+    deriv: int,
+    delta: float,
+) -> np.ndarray:
+    """
+    Apply Savitzky-Golay filter handling NaN values.
 
+    - If NaNs are only at the beginning or end, filter the valid chunk
+    - If NaNs are in the middle, interpolate, filter, then restore NaNs
+    """
+    nan_mask = np.isnan(data)
+
+    if not nan_mask.any():
+        return savgol_filter(
+            data,
+            window_length=window_length,
+            polyorder=polyorder,
+            deriv=deriv,
+            delta=delta,
+        )
+
+    if nan_mask.all():
+        return np.full_like(data, np.nan)
+
+    valid_indices = np.where(~nan_mask)[0]
+    first_valid = valid_indices[0]
+    last_valid = valid_indices[-1]
+
+    middle_section = data[first_valid : last_valid + 1]
+    middle_nan_mask = np.isnan(middle_section)
+
+    if not middle_nan_mask.any():
+        result = np.full_like(data, np.nan)
+        if len(middle_section) >= window_length:
+            filtered_middle = savgol_filter(
+                middle_section,
+                window_length=window_length,
+                polyorder=polyorder,
+                deriv=deriv,
+                delta=delta,
+            )
+            result[first_valid : last_valid + 1] = filtered_middle
+        else:
+            result[first_valid : last_valid + 1] = np.gradient(middle_section, delta)
+        return result
+    else:
+        result = np.full_like(data, np.nan)
+        data_interp = data.copy()
+        valid_mask = ~nan_mask
+        x_valid = np.where(valid_mask)[0]
+        y_valid = data[valid_mask]
+        x_interp = np.arange(first_valid, last_valid + 1)
+        data_interp[first_valid : last_valid + 1] = np.interp(
+            x_interp, x_valid, y_valid
+        )
+        middle_interp = data_interp[first_valid : last_valid + 1]
+
+        if len(middle_interp) >= window_length:
+            filtered_middle = savgol_filter(
+                middle_interp,
+                window_length=window_length,
+                polyorder=polyorder,
+                deriv=deriv,
+                delta=delta,
+            )
+        else:
+            filtered_middle = np.gradient(middle_interp, delta)
+
+        result[first_valid : last_valid + 1] = filtered_middle
+        result[nan_mask] = np.nan
+        return result
 
 ################################ Title of Page #####################################################
 st.set_page_config(page_title="Cone Data Editor", page_icon="📈", layout="wide")
@@ -119,7 +192,19 @@ if material_selection:
                 prepared_data = str(test_name_map[test_selection])
                 og_name = test_metadata["Original Testname"]
                 name = test_metadata["Testname"]
-                original_data = prepared_data.replace("Exp-Data_Prepared-Final", "Exp-Data_Parsed").replace(name,og_name)
+                
+                # Get subfolder from Original Testname (e.g., "FTT-White/2019" -> "2019")
+                og_form = test_metadata.get("Original Source", "")
+                subfolder = og_form.split("/")[1] if "/" in og_form else ""
+                
+                # Build original data path with subfolder
+                original_data = prepared_data.replace("Exp-Data_Prepared-Final", "Exp-Data_Parsed")
+                if subfolder:
+                    # Insert subfolder before filename
+                    original_data = original_data.replace(name, f"{subfolder}/{og_name}")
+                else:
+                    original_data = original_data.replace(name, og_name)
+                
                 save_path = str(test_name_map[test_selection])
                 shutil.copy(original_data, save_path)
                 test_metadata["Data Corrections"].append(f"{date}: Data reverted to original")
@@ -173,39 +258,20 @@ if material_selection:
                 data['MLRPUA (g/s-m2)'] = None
             
             if not data["Mass (g)"].isnull().all():
-                data['MLR (g/s)'] = None
-                m = data["Mass (g)"]
-                for i in range(len(data)):
-                    if i == 0:
-                        data.loc[i,"MLR (g/s)"] = (25*m[0] - 48*m[1] + 36*m[2] - 16*m[3] + 3*m[4])/(12*data['dt'].iloc[i])
-                    elif i == 1:
-                        data.loc[i,"MLR (g/s)"] = (3*m[0] + 10*m[1] - 18*m[2] + 6*m[3] - m[4])/(12*data['dt'].iloc[i])
-                    elif i ==len(data) -2:
-                        data.loc[i,"MLR (g/s)"] = (-3*m[i+1] - 10*m[i] + 18*m[i-1] - 6*m[i-2] + m[i-3])/(12*data['dt'].iloc[i])
-                    elif i == len(data)-1:
-                        data.loc[i,"MLR (g/s)"] = (-25*m[i] + 48*m[i-1] - 36*m[i-2] + 16*m[i-3] - 3*m[i-4])/(12*data['dt'].iloc[i])
-                    else:
-                        data.loc[i,"MLR (g/s)"] = (-m[i-2]+ 8*m[i-1]- 8*m[i+1]+m[i+2])/(12*data['dt'].iloc[i])
-
+                dm_dt = safe_savgol_filter(
+                            data["Mass (g)"].values,
+                            window_length=int(0.08*len(data)) if len(data) >= 50 else 3,  # Adjust window length based on data size, minimum of 3
+                            polyorder=2,
+                            deriv=1,
+                            delta=data['Time (s)'].diff().median(),
+                        )# Parameters for savgol filter based on Staggs paper
+                data['MLR (g/s)'] = (-1)*dm_dt
                 data["MLRPUA (g/s-m2)"] = data["MLR (g/s)"] / surf_area if surf_area is not None else None 
                 data["MassPUA (g/m2)"] = data["Mass (g)"]  / surf_area if surf_area is not None else None
                 data['Mass Loss (g)'] = mass - data["Mass (g)"] if mass is not None else None
                 data['Mass LossPUA (g/m2)'] = (mass / surf_area) - data["MassPUA (g/m2)"] if mass is not None and surf_area is not None else None
             elif not data['MassPUA (g/m2)'].isnull().all():
-                data['MLRPUA (g/s-m2)'] = None
-                m = data["MassPUA (g/m2)"]
-                for i in range(len(data)):
-                    if i == 0:
-                        data.loc[i,"MLRPUA (g/s-m2)"] = (25*m[0] - 48*m[1] + 36*m[2] - 16*m[3] + 3*m[4])/(12*data['dt'].iloc[i])
-                    elif i == 1:
-                        data.loc[i,"MLRPUA (g/s-m2)"] = (3*m[0] + 10*m[1] - 18*m[2] + 6*m[3] - m[4])/(12*data['dt'].iloc[i])
-                    elif i ==len(data) -2:
-                        data.loc[i,"MLRPUA (g/s-m2)"] = (-3*m[i+1] - 10*m[i] + 18*m[i-1] - 6*m[i-2] + m[i-3])/(12*data['dt'].iloc[i])
-                    elif i == len(data)-1:
-                        data.loc[i,"MLRPUA (g/s-m2)"] = (-25*m[i] + 48*m[i-1] - 36*m[i-2] + 16*m[i-3] - 3*m[i-4])/(12*data['dt'].iloc[i])
-                    else:
-                        data.loc[i,"MLRPUA (g/s-m2)"] = (-m[i-2]+ 8*m[i-1]- 8*m[i+1]+m[i+2])/(12*data['dt'].iloc[i])
-
+                data['MLRPUA (g/s-m2)'] = data['MLR (g/s)'] = savgol_filter((-1)*np.gradient(data['MassPUA (g/m2)'],data['Time (s)']),53,3)
                 data["MLR (g/s)"] = data["MLRPUA (g/s-m2)"] * surf_area if surf_area is not None else None 
                 data["Mass (g)"] = data["MassPUA (g/m2)"] * surf_area if surf_area is not None else None
                 data['Mass Loss (g)'] = mass - data["Mass (g)"] if mass is not None else None
@@ -300,6 +366,10 @@ if material_selection:
         ######################################################################################################################################################################
 
         ############################################### Generate Plot #########################################################                 
+            
+            
+            
+            
             normalize = st.checkbox("Normalize Y-Axis Data by Surface Area (m2)")
             additional = st.checkbox("View Additional Calculated Properties")
             if not normalize and not additional:
@@ -330,7 +400,7 @@ if material_selection:
             elif not normalize and additional:
                 options = [
                     'Mass Loss (g)',
-                "CO2 Production (g/s)", 'CO2 (kg/kg)', "CO Production (g/s)", "CO2 (kg/kg)", "O2 Consumption (g/s)", "H2O (kg/kg)",
+                "CO2 Production (g/s)", 'CO2 (kg/kg)', "CO Production (g/s)", "CO (kg/kg)", "O2 Consumption (g/s)", "H2O (kg/kg)",
                 "HCl (kg/kg)", "H'carbs (kg/kg)",
                 "Soot Production (g/s)", 'Smoke Production (m2/s)', "Extinction Area (m2/kg)","MFR (kg/s)",'V Duct (m3/s)'
                 ]
@@ -344,7 +414,7 @@ if material_selection:
             else:
                 options = [
                     'Mass LossPUA (g/m2)',
-                "CO2 ProductionPUA (g/s-m2)", 'CO2 (kg/kg)', "CO ProductionPUA (g/s-m2)", "CO2 (kg/kg)", "O2 ConsumptionPUA (g/s-m2)", "H2O (kg/kg)",
+                "CO2 ProductionPUA (g/s-m2)", 'CO2 (kg/kg)', "CO ProductionPUA (g/s-m2)", "CO (kg/kg)", "O2 ConsumptionPUA (g/s-m2)", "H2O (kg/kg)",
                 "HCl (kg/kg)", "H'carbs (kg/kg)",
                 "Soot ProductionPUA (g/s-m2)", 'Smoke ProductionPUA ((m2/s)/m2)', "Extinction Area (m2/kg)","MFR (kg/s)",'V Duct (m3/s)'
                 ]
@@ -397,6 +467,19 @@ if material_selection:
                     yaxis_range=[y_min, y_max]
                 )
                 st.plotly_chart(fig)
+                
+                # Export full dataframe button
+                st.markdown("---")
+                st.subheader("Export Data")
+                
+                # Create a download button for the full dataframe
+                csv = test_data.to_csv(index=False)
+                st.download_button(
+                    label="Download Full Test Data as CSV",
+                    data=csv,
+                    file_name=f"{test_selection}_full_data.csv",
+                    mime="text/csv",
+                )
             ################################################ Saving Adjusted/ Clipped Data ########################################################################
                 # Save the adjusted data to a specified path
                 st.sidebar.markdown("This button only saves data clipping, csv file modifications are saved seperatley")

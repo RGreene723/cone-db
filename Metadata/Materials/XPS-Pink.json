@@ -1,0 +1,91 @@
+{
+    "Common Names": "Extruded Polystyrene",
+    "Material ID": "XPS-pink",
+    "CAS Number": null,
+    "Trade Name": "FOAMULAR 150 (1 in.) and FOAMULAR 250 (2 in.)Foam",
+    "Model Number": null,
+    "Manufacturer": "Owens Corning",
+    "Country of Origin": null,
+    "Distributor / Harvesting Site": "The Home Depot",
+    "Date Acquired": "February 2020",
+    "Description": {
+        "Color": "Pink",
+        "Shape": null,
+        "Finish": "Smooth, Rigid Foam Board",
+        "Form": "Porous Foam",
+        "Thickness": "24.8-26.0mm, 49-51mm",
+        "Notes": "Pink XPS foam board"
+    },
+    "Categories": {
+        "Synthetic/ Natural/ Vegetation": "Synthetic",
+        "Copolymer/ Homopolymer/ Composite": null,
+        "Thermoset/ Thermoplastic": "Thermoplastic",
+        "Composite Layers": null,
+        "Additives": {
+            "Plasticizers": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Stabilizer": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Flame Retardant": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Colorant": {
+                "Name": null,
+                "Weight %": null
+            },
+            "UV Stabilizer": {
+                "Name": null,
+                "Weight %": null
+            }
+        }
+    },
+    "Molecular Weight": null,
+    "XPS-Pink_Cone_50kW_hor": {},
+    "XPS-Pink_STA_N2_10K_TGA": {
+        "Experiments": [
+            "XPS-Pink_STA_N2_10K_R1",
+            "XPS-Pink_STA_N2_10K_R2",
+            "XPS-Pink_STA_N2_10K_R3",
+            "XPS-Pink_STA_N2_10K_R4",
+            "XPS-Pink_STA_N2_10K_R5",
+            "XPS-Pink_STA_N2_10K_R6",
+            "XPS-Pink_STA_N2_10K_R7",
+            "XPS-Pink_STA_N2_10K_R8"
+        ],
+        "Peak MLR (1/s)": 0.004335,
+        "Uc Peak MLR (1/s)": 0.0001649,
+        "TGA T_peak (K)": 693.6,
+        "Uc TGA T_peak (K)": 1.321,
+        "TGA T_onset (K)": 606.7,
+        "Uc TGA T_onset (K)": 3.9,
+        "T_endset (K)": 737.6,
+        "Uc T_endset (K)": 0.7289,
+        "Mass at Onset (%)": 98.26,
+        "Uc Mass at Onset (%)": 0.3263,
+        "Residue Yield (%)": 0.5579,
+        "Uc Residue Yield (%)": 0.3484
+    },
+    "XPS-Pink_STA_N2_10K_DSC": {
+        "Experiments": [
+            "XPS-Pink_STA_N2_10K_R1",
+            "XPS-Pink_STA_N2_10K_R2",
+            "XPS-Pink_STA_N2_10K_R3",
+            "XPS-Pink_STA_N2_10K_R4",
+            "XPS-Pink_STA_N2_10K_R5",
+            "XPS-Pink_STA_N2_10K_R6",
+            "XPS-Pink_STA_N2_10K_R7",
+            "XPS-Pink_STA_N2_10K_R8"
+        ],
+        "Peak Heat Flow (W/g)": 3.433,
+        "Uc Peak Heat Flow (W/g)": 0.6009,
+        "DSC T_peak (K)": 695.2,
+        "Uc DSC T_peak (K)": 2.33,
+        "DSC T_onset (K)": 432.0,
+        "Uc DSC T_onset (K)": 117.7
+    }
+}

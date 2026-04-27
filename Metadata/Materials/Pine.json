@@ -20,6 +20,7 @@
         "Synthetic/ Natural/ Vegetation": "Vegetation",
         "Copolymer/ Homopolymer/ Composite": null,
         "Thermoset/ Thermoplastic": null,
+        "Composite Layers": null,
         "Additives": {
             "Plasticizers": {
                 "Name": null,
@@ -44,81 +45,59 @@
         }
     },
     "Molecular Weight": null,
-    "TGA": {
-        "Experiments": [],
-        "Mass at Degradation Onset (%)": null,
-        "Uncertainty in Mass at Degradation Onset (%)": null,
-        "Degradation Onset Temperature (K)": null,
-        "Uncertainty in Degradation Onset Temperature (K)": null,
-        "Peak Normalized Mass Loss Rate": null,
-        "Uncertainty in Peak Normalized Mass Loss Rate": null,
-        "Peak Mass Loss Temperature (K)": null,
-        "Uncertainty in Peak Mass Loss Temperature (K)": null,
-        "Residue Mass (%)": null,
-        "Uncertainty in Residue Mass (%)": null
-    },
-    "DSC": {
-        "Experiments": [],
-        "Onset Temperature (K)": null,
-        "Uncertainty in Onset Temperature (K)": null,
-        "Peak Temperature (K)": null,
-        "Uncertainty in Peak Temperature (K)": null,
-        "Peak Heat Flow (W/g)": null,
-        "Uncertainty in Peak Heat Flow (W/g)": null,
-        "All Endothermic Heat Flow": null
-    },
-    "MCC": {
-        "Experiments": [],
-        "Peak HRR (W/g)": null,
-        "Uncertainty in Peak HRR (W/g)": null,
-        "Peak HRR Temperature (K)": null,
-        "Uncertainty in Peak HRR Temperature (K)": null,
-        "Onset Temperature (K)": null,
-        "Uncertainty in Onset Temperature (K)": null,
-        "Endset Temperature (K)": null,
-        "Uncertainty in Endset Temperature (K)": null,
-        "Heat Of Combustion (J/g)": null,
-        "Uncertainty in Heat Of Combustion (J/g)": null,
-        "Heat Release Capacity (J/gK)": null,
-        "Uncertainty in Heat Release Capacity (J/gK)": null,
-        "Fire Growth Capacity (-)": null,
-        "Uncertainty in Fire Growth Capacity (-)": null,
-        "Residue Yield (%)": null,
-        "Uncertainty in Residue Yield (%)": null
-    },
-    "Flash": {
-        "Experiments-CHNS": [],
-        "Experiments-O": [],
-        "Weight % Carbon (%)": null,
-        "Uncertainty in Weight % Carbon (%)": null,
-        "Weight % Hydrogen (%)": null,
-        "Uncertainty in Weight % Hydrogen (%)": null,
-        "Weight % Nitrogen (%)": null,
-        "Uncertainty in Weight % Nitrogen (%)": null,
-        "Weight % Sulfur (%)": null,
-        "Uncertainty in Weight % Sulfur (%)": null,
-        "Weight % Oxygen (%)": null,
-        "Uncertainty in Weight % Oxygen (%)": null
-    },
-    "MWA": {
-        "Experiments": [],
-        "Average Pyrolyzate Molecular Weight (g/mol)": null,
-        "Uncertainty in Average Pyrolyzate Molecular Weight (g/mol)": null,
-        "Temperature Where MWA is Calculated (K)": null,
-        "Uncertainty in Temperature Where MWA is Calculated (K)": null
-    },
-    "Density": {
-        "Experiments": [],
-        "Density (g/m^3)": null,
-        "Uncertainty in Density (g/m^3)": null
-    },
-    "CAPA II": {
-        "Experiments": []
-    },
-    "Gasification": {
-        "Experiments": []
-    },
-    "Cone Calorimeter": {
-        "Experiments": []
+    "Pine_Cone_50kW_hor": {
+        "Experiments": [
+            "Pine_50kW_hor_R1",
+            "Pine_50kW_hor_R2",
+            "Pine_50kW_hor_R3",
+            "Pine_50kW_hor_R4",
+            "Pine_50kW_hor_R5",
+            "Pine_50kW_hor_R6",
+            "Pine_50kW_hor_R7"
+        ],
+        "t_ignition (s)": 21.43,
+        "Uc t_ignition (s)": 6.817,
+        "m_ignition (g)": 47.8,
+        "Uc m_ignition (g)": 4.028,
+        "Residue Yield (%)": 20.44,
+        "Uc Residue Yield (%)": 2.618,
+        "Average HRRPUA 60s (kW/m2)": 100.2,
+        "Uc Average HRRPUA 60s (kW/m2)": 15.84,
+        "Average HRRPUA 180s (kW/m2)": 82.61,
+        "Uc Average HRRPUA 180s (kW/m2)": 16.2,
+        "Average HRRPUA 300s (kW/m2)": 77.51,
+        "Uc Average HRRPUA 300s (kW/m2)": 19.64,
+        "Steady Burning MLRPUA (g/s-m2)": 6.916,
+        "Uc Steady Burning MLRPUA (g/s-m2)": 0.7273,
+        "Peak MLRPUA (g/s-m2)": 10.62,
+        "Uc Peak MLRPUA (g/s-m2)": 1.118,
+        "Steady Burning HRRPUA (kW/m2)": 90.52,
+        "Uc Steady Burning HRRPUA (kW/m2)": 18.16,
+        "Peak HRRPUA (kW/m2)": 229.8,
+        "Uc Peak HRRPUA (kW/m2)": 23.72,
+        "Total Heat Release (MJ/m2)": 58.67,
+        "Uc Total Heat Release (MJ/m2)": 5.073,
+        "Average HoC (MJ/kg)": 13.76,
+        "Uc Average HoC (MJ/kg)": 2.093,
+        "Average Specific Extinction Area (m2/kg)": 224.8,
+        "Uc Average Specific Extinction Area (m2/kg)": 25.54,
+        "Smoke Production Pre-ignition (m2/m2)": 4.087,
+        "Uc Smoke Production Pre-ignition (m2/m2)": 3.72,
+        "Smoke Production Post-ignition (m2/m2)": 283.8,
+        "Uc Smoke Production Post-ignition (m2/m2)": 602.5,
+        "Smoke Production Total (m2/m2)": 287.8,
+        "Uc Smoke Production Total (m2/m2)": 604.3,
+        "Y_Soot (g/g)": 0.006401,
+        "Uc Y_Soot (g/g)": 0.01451,
+        "Y_CO2 (g/g)": 1.076,
+        "Uc Y_CO2 (g/g)": 0.1602,
+        "Y_CO (g/g)": 0.03409,
+        "Uc Y_CO (g/g)": 0.006288,
+        "Fire Growth Potential (m2/J)": 1.713e-06,
+        "Uc Fire Growth Potential (m2/J)": 9.458e-07,
+        "Ignition Energy (MJ/m2)": 1.071,
+        "Uc Ignition Energy (MJ/m2)": 0.3409,
+        "t_flameout (s)": 651.6,
+        "Uc t_flameout (s)": 91.16
     }
 }

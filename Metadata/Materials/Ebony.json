@@ -1,6 +1,6 @@
 {
     "Common Names": "Ebony Wood",
-    "Material ID":"Ebony",
+    "Material ID": "Ebony",
     "CAS Number": null,
     "Trade Name": null,
     "Model Number": null,
@@ -20,6 +20,7 @@
         "Synthetic/ Natural/ Vegetation": "Vegetation",
         "Copolymer/ Homopolymer/ Composite": null,
         "Thermoset/ Thermoplastic": null,
+        "Composite Layers": null,
         "Additives": {
             "Plasticizers": {
                 "Name": null,
@@ -43,5 +44,56 @@
             }
         }
     },
-    "Molecular Weight": null
+    "Molecular Weight": null,
+    "Ebony_Cone_50kW_hor": {
+        "Experiments": [
+            "Ebony_50kW_hor_R1",
+            "Ebony_50kW_hor_R2",
+            "Ebony_50kW_hor_R3"
+        ],
+        "t_ignition (s)": 53.0,
+        "Uc t_ignition (s)": 16.0,
+        "m_ignition (g)": 118.5,
+        "Uc m_ignition (g)": 41.06,
+        "Residue Yield (%)": 35.23,
+        "Uc Residue Yield (%)": 27.96,
+        "Average HRRPUA 60s (kW/m2)": 119.7,
+        "Uc Average HRRPUA 60s (kW/m2)": 15.17,
+        "Average HRRPUA 180s (kW/m2)": 104.3,
+        "Uc Average HRRPUA 180s (kW/m2)": 10.04,
+        "Average HRRPUA 300s (kW/m2)": 93.54,
+        "Uc Average HRRPUA 300s (kW/m2)": 7.436,
+        "Steady Burning MLRPUA (g/s-m2)": 13.36,
+        "Uc Steady Burning MLRPUA (g/s-m2)": 4.368,
+        "Peak MLRPUA (g/s-m2)": 23.41,
+        "Uc Peak MLRPUA (g/s-m2)": 5.411,
+        "Steady Burning HRRPUA (kW/m2)": 142.7,
+        "Uc Steady Burning HRRPUA (kW/m2)": 59.59,
+        "Peak HRRPUA (kW/m2)": 292.2,
+        "Uc Peak HRRPUA (kW/m2)": 58.26,
+        "Total Heat Release (MJ/m2)": 99.73,
+        "Uc Total Heat Release (MJ/m2)": 5.147,
+        "Average HoC (MJ/kg)": 12.79,
+        "Uc Average HoC (MJ/kg)": 5.802,
+        "Average Specific Extinction Area (m2/kg)": 24.95,
+        "Uc Average Specific Extinction Area (m2/kg)": 9.623,
+        "Smoke Production Pre-ignition (m2/m2)": 7.869,
+        "Uc Smoke Production Pre-ignition (m2/m2)": 9.125,
+        "Smoke Production Post-ignition (m2/m2)": 190.2,
+        "Uc Smoke Production Post-ignition (m2/m2)": 110.1,
+        "Smoke Production Total (m2/m2)": 198.1,
+        "Uc Smoke Production Total (m2/m2)": 118.5,
+        "Y_Soot (g/g)": 0.00181,
+        "Uc Y_Soot (g/g)": 0.0008876,
+        "Y_CO2 (g/g)": 0.8111,
+        "Uc Y_CO2 (g/g)": 0.06063,
+        "Y_CO (g/g)": 0.01055,
+        "Uc Y_CO (g/g)": 0.002628,
+        "Fire Growth Potential (m2/J)": 9.115e-07,
+        "Uc Fire Growth Potential (m2/J)": 1.915e-07,
+        "Ignition Energy (MJ/m2)": 2.65,
+        "Uc Ignition Energy (MJ/m2)": 0.8,
+        "t_flameout (s)": 818.0,
+        "Uc t_flameout (s)": 64.84
+    }
 }

@@ -1,0 +1,163 @@
+{
+    "Common Names": "High Impact Polystyrene",
+    "Material ID": "HIPS",
+    "CAS Number": null,
+    "Trade Name": "HIPS",
+    "Model Number": null,
+    "Manufacturer": "Spartech",
+    "Country of Origin": null,
+    "Distributor / Harvesting Site": "Curbell Plastics",
+    "Date Acquired": "November 2020",
+    "Description": {
+        "Color": "White HIPS",
+        "Shape": null,
+        "Finish": "Smooth Finish",
+        "Form": null,
+        "Thickness": "6.5-6.7mm",
+        "Notes": null
+    },
+    "Categories": {
+        "Synthetic/ Natural/ Vegetation": "Synthetic Polymer",
+        "Copolymer/ Homopolymer/ Composite": "Copolymer",
+        "Thermoset/ Thermoplastic": "Thermoplastic",
+        "Composite Layers": null,
+        "Additives": {
+            "Plasticizers": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Stabilizer": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Flame Retardant": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Colorant": {
+                "Name": null,
+                "Weight %": null
+            },
+            "UV Stabilizer": {
+                "Name": null,
+                "Weight %": null
+            }
+        }
+    },
+    "Molecular Weight": null,
+    "HIPS_STA_N2_10K_TGA": {
+        "Experiments": [
+            "HIPS_STA_N2_10K_R1",
+            "HIPS_STA_N2_10K_R2",
+            "HIPS_STA_N2_10K_R3",
+            "HIPS_STA_N2_10K_R4",
+            "HIPS_STA_N2_10K_R5",
+            "HIPS_STA_N2_10K_R6",
+            "HIPS_STA_N2_10K_R7"
+        ],
+        "Peak MLR (1/s)": 0.003934,
+        "Uc Peak MLR (1/s)": 2.428e-05,
+        "TGA T_peak (K)": 709.4,
+        "Uc TGA T_peak (K)": 0.189,
+        "TGA T_onset (K)": 607.9,
+        "Uc TGA T_onset (K)": 7.678,
+        "T_endset (K)": 794.5,
+        "Uc T_endset (K)": 78.27,
+        "Mass at Onset (%)": 98.29,
+        "Uc Mass at Onset (%)": 0.2644,
+        "Residue Yield (%)": 3.24,
+        "Uc Residue Yield (%)": 0.1878
+    },
+    "HIPS_STA_N2_10K_DSC": {
+        "Experiments": [
+            "HIPS_STA_N2_10K_R1",
+            "HIPS_STA_N2_10K_R2",
+            "HIPS_STA_N2_10K_R3",
+            "HIPS_STA_N2_10K_R4",
+            "HIPS_STA_N2_10K_R5",
+            "HIPS_STA_N2_10K_R6",
+            "HIPS_STA_N2_10K_R7"
+        ],
+        "Peak Heat Flow (W/g)": 3.722,
+        "Uc Peak Heat Flow (W/g)": 0.2219,
+        "DSC T_peak (K)": 709.0,
+        "Uc DSC T_peak (K)": 0.5774,
+        "DSC T_onset (K)": 619.5,
+        "Uc DSC T_onset (K)": 230.3
+    },
+    "HIPS_OEA_CHNS": {
+        "Experiments": [
+            "HIPS_OEA_CHNS_Unk_R1.json",
+            "HIPS_OEA_CHNS_Unk_R2.json",
+            "HIPS_OEA_CHNS_Unk_R3.json"
+        ],
+        "Carbon (wt.%)": 89.2,
+        "Uc Carbon (wt.%)": 1.79,
+        "Hydrogen (wt.%)": 7.93,
+        "Uc Hydrogen (wt.%)": 0.16,
+        "Nitrogen (wt.%)": 0.0,
+        "Uc Nitrogen (wt.%)": null,
+        "Sulfur (wt.%)": 0.0,
+        "Uc Sulfur (wt.%)": null
+    },
+    "HIPS_OEA_O": {
+        "Experiments": [
+            "HIPS_OEA_O_Unk_R1.json",
+            "HIPS_OEA_O_Unk_R2.json",
+            "HIPS_OEA_O_Unk_R3.json"
+        ],
+        "Oxygen (wt.%)": 0.49,
+        "Uc Oxygen (wt.%)": 0.09
+    },
+    "HIPS_Cone_50kW_hor": {
+        "Experiments": [
+            "HIPS_50kW_hor_R1",
+            "HIPS_50kW_hor_R2",
+            "HIPS_50kW_hor_R3"
+        ],
+        "t_ignition (s)": 36.33,
+        "Uc t_ignition (s)": 1.155,
+        "m_ignition (g)": 71.39,
+        "Uc m_ignition (g)": 13.22,
+        "Residue Yield (%)": 4.866,
+        "Uc Residue Yield (%)": 17.17,
+        "Average HRRPUA 60s (kW/m2)": 528.8,
+        "Uc Average HRRPUA 60s (kW/m2)": 62.8,
+        "Average HRRPUA 180s (kW/m2)": 740.5,
+        "Uc Average HRRPUA 180s (kW/m2)": 81.27,
+        "Average HRRPUA 300s (kW/m2)": 658.3,
+        "Uc Average HRRPUA 300s (kW/m2)": 24.4,
+        "Steady Burning MLRPUA (g/s-m2)": 29.58,
+        "Uc Steady Burning MLRPUA (g/s-m2)": 1.538,
+        "Peak MLRPUA (g/s-m2)": 35.93,
+        "Uc Peak MLRPUA (g/s-m2)": 0.4036,
+        "Steady Burning HRRPUA (kW/m2)": 714.3,
+        "Uc Steady Burning HRRPUA (kW/m2)": 584.7,
+        "Peak HRRPUA (kW/m2)": 1095.0,
+        "Uc Peak HRRPUA (kW/m2)": 57.88,
+        "Total Heat Release (MJ/m2)": 198.2,
+        "Uc Total Heat Release (MJ/m2)": 8.541,
+        "Average HoC (MJ/kg)": 30.93,
+        "Uc Average HoC (MJ/kg)": 4.943,
+        "Average Specific Extinction Area (m2/kg)": 852.6,
+        "Uc Average Specific Extinction Area (m2/kg)": 139.1,
+        "Smoke Production Pre-ignition (m2/m2)": -0.0004612,
+        "Uc Smoke Production Pre-ignition (m2/m2)": -0.01648,
+        "Smoke Production Post-ignition (m2/m2)": 1808.0,
+        "Uc Smoke Production Post-ignition (m2/m2)": 6261.0,
+        "Smoke Production Total (m2/m2)": 1808.0,
+        "Uc Smoke Production Total (m2/m2)": 6261.0,
+        "Y_Soot (g/g)": 0.03051,
+        "Uc Y_Soot (g/g)": 0.1057,
+        "Y_CO2 (g/g)": 2.142,
+        "Uc Y_CO2 (g/g)": 0.06866,
+        "Y_CO (g/g)": 0.07693,
+        "Uc Y_CO (g/g)": 0.002186,
+        "Fire Growth Potential (m2/J)": 7.436e-06,
+        "Uc Fire Growth Potential (m2/J)": 7.078e-07,
+        "Ignition Energy (MJ/m2)": 1.817,
+        "Uc Ignition Energy (MJ/m2)": 0.05774,
+        "t_flameout (s)": 313.0,
+        "Uc t_flameout (s)": 55.75
+    }
+}

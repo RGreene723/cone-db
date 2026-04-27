@@ -1,0 +1,145 @@
+{
+    "Common Names": "Acetal",
+    "Material ID": "POM-GF",
+    "CAS Number": null,
+    "Trade Name": "Delrin 570",
+    "Model Number": null,
+    "Manufacturer": "Ensinger",
+    "Country of Origin": null,
+    "Distributor / Harvesting Site": [
+        "EMCO Plastics (1/4 in.)",
+        "Laird Plastics (3/8in."
+    ],
+    "Date Acquired": [
+        "December 2020 (EMCO)",
+        "April 2022(Laird)"
+    ],
+    "Description": {
+        "Color": "White",
+        "Shape": null,
+        "Finish": "Smooth finish",
+        "Form": null,
+        "Thickness": "6.9-7.1mm (and 9.5mm, test R3)",
+        "Notes": "Natural POM, white & Smooth finish, reinforced with 20 wt. % chopped glass fibers"
+    },
+    "Categories": {
+        "Synthetic/ Natural/ Vegetation": "Synthetic",
+        "Copolymer/ Homopolymer/ Composite": "Composite",
+        "Thermoset/ Thermoplastic": "Thermoplastic",
+        "Composite Layers": null,
+        "Additives": {
+            "Plasticizers": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Stabilizer": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Flame Retardant": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Colorant": {
+                "Name": null,
+                "Weight %": null
+            },
+            "UV Stabilizer": {
+                "Name": null,
+                "Weight %": null
+            }
+        }
+    },
+    "Molecular Weight": null,
+    "POMGF_STA_N2_10K_TGA": {
+        "Experiments": [
+            "POMGF_STA_N2_10K_R1",
+            "POMGF_STA_N2_10K_R2",
+            "POMGF_STA_N2_10K_R3",
+            "POMGF_STA_N2_10K_R4",
+            "POMGF_STA_N2_10K_R5",
+            "POMGF_STA_N2_10K_R6",
+            "POMGF_STA_N2_10K_R7"
+        ],
+        "Peak MLR (1/s)": 0.003253,
+        "Uc Peak MLR (1/s)": 0.0001122,
+        "TGA T_peak (K)": 653.8,
+        "Uc TGA T_peak (K)": 3.773,
+        "TGA T_onset (K)": 511.7,
+        "Uc TGA T_onset (K)": 4.309,
+        "T_endset (K)": 708.6,
+        "Uc T_endset (K)": 1.134,
+        "Mass at Onset (%)": 99.11,
+        "Uc Mass at Onset (%)": 0.6296,
+        "Residue Yield (%)": 17.57,
+        "Uc Residue Yield (%)": 0.7879
+    },
+    "POMGF_STA_N2_10K_DSC": {
+        "Experiments": [
+            "POMGF_STA_N2_10K_R1",
+            "POMGF_STA_N2_10K_R2",
+            "POMGF_STA_N2_10K_R3",
+            "POMGF_STA_N2_10K_R4",
+            "POMGF_STA_N2_10K_R5",
+            "POMGF_STA_N2_10K_R6",
+            "POMGF_STA_N2_10K_R7"
+        ],
+        "Peak Heat Flow (W/g)": 6.563,
+        "Uc Peak Heat Flow (W/g)": 0.4755,
+        "DSC T_peak (K)": 655.5,
+        "Uc DSC T_peak (K)": 7.118,
+        "DSC T_onset (K)": 565.0,
+        "Uc DSC T_onset (K)": 59.12
+    },
+    "POMGF_Cone_50kW_hor": {
+        "Experiments": [
+            "POMGF_50kW_hor_R1",
+            "POMGF_50kW_hor_R2",
+            "POMGF_50kW_hor_R3"
+        ],
+        "t_ignition (s)": 34.0,
+        "Uc t_ignition (s)": 15.62,
+        "m_ignition (g)": 109.2,
+        "Uc m_ignition (g)": 2.777,
+        "Residue Yield (%)": 5.569,
+        "Uc Residue Yield (%)": 23.8,
+        "Average HRRPUA 60s (kW/m2)": 234.9,
+        "Uc Average HRRPUA 60s (kW/m2)": 21.01,
+        "Average HRRPUA 180s (kW/m2)": 250.6,
+        "Uc Average HRRPUA 180s (kW/m2)": 10.86,
+        "Average HRRPUA 300s (kW/m2)": 230.3,
+        "Uc Average HRRPUA 300s (kW/m2)": 8.447,
+        "Steady Burning MLRPUA (g/s-m2)": 11.08,
+        "Uc Steady Burning MLRPUA (g/s-m2)": 2.642,
+        "Peak MLRPUA (g/s-m2)": 49.71,
+        "Uc Peak MLRPUA (g/s-m2)": 70.38,
+        "Steady Burning HRRPUA (kW/m2)": 150.2,
+        "Uc Steady Burning HRRPUA (kW/m2)": 63.82,
+        "Peak HRRPUA (kW/m2)": 314.0,
+        "Uc Peak HRRPUA (kW/m2)": 18.47,
+        "Total Heat Release (MJ/m2)": 129.7,
+        "Uc Total Heat Release (MJ/m2)": 2.35,
+        "Average HoC (MJ/kg)": 12.82,
+        "Uc Average HoC (MJ/kg)": 3.275,
+        "Average Specific Extinction Area (m2/kg)": 886.2,
+        "Uc Average Specific Extinction Area (m2/kg)": 167.7,
+        "Smoke Production Pre-ignition (m2/m2)": 165.0,
+        "Uc Smoke Production Pre-ignition (m2/m2)": 571.4,
+        "Smoke Production Post-ignition (m2/m2)": 2700.0,
+        "Uc Smoke Production Post-ignition (m2/m2)": 9351.0,
+        "Smoke Production Total (m2/m2)": 2865.0,
+        "Uc Smoke Production Total (m2/m2)": 9922.0,
+        "Y_Soot (g/g)": 0.03039,
+        "Uc Y_Soot (g/g)": 0.1053,
+        "Y_CO2 (g/g)": 1.124,
+        "Uc Y_CO2 (g/g)": 0.01233,
+        "Y_CO (g/g)": 0.003221,
+        "Uc Y_CO (g/g)": 0.003842,
+        "Fire Growth Potential (m2/J)": 2.634e-06,
+        "Uc Fire Growth Potential (m2/J)": 1.617e-06,
+        "Ignition Energy (MJ/m2)": 1.7,
+        "Uc Ignition Energy (MJ/m2)": 0.781,
+        "t_flameout (s)": 743.0,
+        "Uc t_flameout (s)": 185.6
+    }
+}

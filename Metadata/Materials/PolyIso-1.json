@@ -1,0 +1,86 @@
+{
+    "Common Names": "Poly(Isocyanurate) foam",
+    "Material ID": "PolyIso-1",
+    "CAS Number": null,
+    "Trade Name": "Thermasheath",
+    "Model Number": null,
+    "Manufacturer": "RMAX",
+    "Country of Origin": null,
+    "Distributor / Harvesting Site": "Lowe's",
+    "Date Acquired": "February 2020",
+    "Description": {
+        "Color": "Yellow",
+        "Shape": null,
+        "Finish": "reflective surface",
+        "Form": "Porous Foam",
+        "Thickness": "nominal thickness 1in. (24.3 to 24.6 mm)",
+        "Notes": "Yellow polyiso foam core bonded to Kraft-paper-reinforced aluminum facers on each side; both sides have a reflective surface; nominal thickness 1in. (24.3 to 24.6 mm)"
+    },
+    "Categories": {
+        "Synthetic/ Natural/ Vegetation": "Synthetic",
+        "Copolymer/ Homopolymer/ Composite": null,
+        "Thermoset/ Thermoplastic": "Thermoset",
+        "Composite Layers": null,
+        "Additives": {
+            "Plasticizers": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Stabilizer": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Flame Retardant": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Colorant": {
+                "Name": null,
+                "Weight %": null
+            },
+            "UV Stabilizer": {
+                "Name": null,
+                "Weight %": null
+            }
+        }
+    },
+    "Molecular Weight": null,
+    "PolyIso-1_STA_N2_10K_TGA": {
+        "Experiments": [
+            "PolyIso-1_STA_N2_10K_R1",
+            "PolyIso-1_STA_N2_10K_R2",
+            "PolyIso-1_STA_N2_10K_R3",
+            "PolyIso-1_STA_N2_10K_R4",
+            "PolyIso-1_STA_N2_10K_R5",
+            "PolyIso-1_STA_N2_10K_R6"
+        ],
+        "Peak MLR (1/s)": 0.0009311,
+        "Uc Peak MLR (1/s)": 2.551e-05,
+        "TGA T_peak (K)": 596.7,
+        "Uc TGA T_peak (K)": 1.366,
+        "TGA T_onset (K)": 374.0,
+        "Uc TGA T_onset (K)": 24.97,
+        "T_endset (K)": 1115.0,
+        "Uc T_endset (K)": 43.59,
+        "Mass at Onset (%)": 99.46,
+        "Uc Mass at Onset (%)": 0.8713,
+        "Residue Yield (%)": 27.61,
+        "Uc Residue Yield (%)": 1.025
+    },
+    "PolyIso-1_STA_N2_10K_DSC": {
+        "Experiments": [
+            "PolyIso-1_STA_N2_10K_R1",
+            "PolyIso-1_STA_N2_10K_R2",
+            "PolyIso-1_STA_N2_10K_R3",
+            "PolyIso-1_STA_N2_10K_R4",
+            "PolyIso-1_STA_N2_10K_R5",
+            "PolyIso-1_STA_N2_10K_R6"
+        ],
+        "Peak Heat Flow (W/g)": 0.9869,
+        "Uc Peak Heat Flow (W/g)": 0.2276,
+        "DSC T_peak (K)": 588.5,
+        "Uc DSC T_peak (K)": 2.828,
+        "DSC T_onset (K)": 305.3,
+        "Uc DSC T_onset (K)": 3.266
+    }
+}

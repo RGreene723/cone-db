@@ -1,9 +1,6 @@
 {
-    "Common Names": [
-        "poly(methyl methacrylate)",
-        "Acrylic"
-    ],
-    "Material ID": "PMMA",
+    "Common Names": "poly(methyl methacrylate)",
+    "Material ID": "PMMA-MaCFP",
     "CAS Number": null,
     "Trade Name": "Acrylite cast black 9H01 GT",
     "Model Number": null,
@@ -20,9 +17,10 @@
         "Notes": "Cell-cast"
     },
     "Categories": {
-        "Synthetic/ Natural/ Vegetation": "Synthetic Polymer",
+        "Synthetic/ Natural/ Vegetation": "Synthetic",
         "Copolymer/ Homopolymer/ Composite": "Homopolymer",
         "Thermoset/ Thermoplastic": "Thermoplastic",
+        "Composite Layers": null,
         "Additives": {
             "Plasticizers": {
                 "Name": null,
@@ -46,5 +44,81 @@
             }
         }
     },
-    "Molecular Weight": null
+    "Molecular Weight": null,
+    "PMMA-MaCFP_STA_N2_10K_TGA": {
+        "Experiments": [
+            "PMMA-MaCFP_STA_N2_10K_R10",
+            "PMMA-MaCFP_STA_N2_10K_R11",
+            "PMMA-MaCFP_STA_N2_10K_R12",
+            "PMMA-MaCFP_STA_N2_10K_R13",
+            "PMMA-MaCFP_STA_N2_10K_R14",
+            "PMMA-MaCFP_STA_N2_10K_R15",
+            "PMMA-MaCFP_STA_N2_10K_R16",
+            "PMMA-MaCFP_STA_N2_10K_R17",
+            "PMMA-MaCFP_STA_N2_10K_R18",
+            "PMMA-MaCFP_STA_N2_10K_R19",
+            "PMMA-MaCFP_STA_N2_10K_R2",
+            "PMMA-MaCFP_STA_N2_10K_R20",
+            "PMMA-MaCFP_STA_N2_10K_R21",
+            "PMMA-MaCFP_STA_N2_10K_R22",
+            "PMMA-MaCFP_STA_N2_10K_R23",
+            "PMMA-MaCFP_STA_N2_10K_R24",
+            "PMMA-MaCFP_STA_N2_10K_R25",
+            "PMMA-MaCFP_STA_N2_10K_R26",
+            "PMMA-MaCFP_STA_N2_10K_R3",
+            "PMMA-MaCFP_STA_N2_10K_R4",
+            "PMMA-MaCFP_STA_N2_10K_R5",
+            "PMMA-MaCFP_STA_N2_10K_R6",
+            "PMMA-MaCFP_STA_N2_10K_R7",
+            "PMMA-MaCFP_STA_N2_10K_R8",
+            "PMMA-MaCFP_STA_N2_10K_R9"
+        ],
+        "Peak MLR (1/s)": 0.002849,
+        "Uc Peak MLR (1/s)": 0.0001095,
+        "TGA T_peak (K)": 641.4,
+        "Uc TGA T_peak (K)": 1.186,
+        "TGA T_onset (K)": 529.2,
+        "Uc TGA T_onset (K)": 2.021,
+        "T_endset (K)": 702.9,
+        "Uc T_endset (K)": 1.922,
+        "Mass at Onset (%)": 97.79,
+        "Uc Mass at Onset (%)": 1.062,
+        "Residue Yield (%)": 1.864,
+        "Uc Residue Yield (%)": 1.97
+    },
+    "PMMA-MaCFP_STA_N2_10K_DSC": {
+        "Experiments": [
+            "PMMA-MaCFP_STA_N2_10K_R10",
+            "PMMA-MaCFP_STA_N2_10K_R11",
+            "PMMA-MaCFP_STA_N2_10K_R12",
+            "PMMA-MaCFP_STA_N2_10K_R13",
+            "PMMA-MaCFP_STA_N2_10K_R14",
+            "PMMA-MaCFP_STA_N2_10K_R15",
+            "PMMA-MaCFP_STA_N2_10K_R16",
+            "PMMA-MaCFP_STA_N2_10K_R17",
+            "PMMA-MaCFP_STA_N2_10K_R18",
+            "PMMA-MaCFP_STA_N2_10K_R19",
+            "PMMA-MaCFP_STA_N2_10K_R2",
+            "PMMA-MaCFP_STA_N2_10K_R20",
+            "PMMA-MaCFP_STA_N2_10K_R21",
+            "PMMA-MaCFP_STA_N2_10K_R22",
+            "PMMA-MaCFP_STA_N2_10K_R23",
+            "PMMA-MaCFP_STA_N2_10K_R24",
+            "PMMA-MaCFP_STA_N2_10K_R25",
+            "PMMA-MaCFP_STA_N2_10K_R26",
+            "PMMA-MaCFP_STA_N2_10K_R3",
+            "PMMA-MaCFP_STA_N2_10K_R4",
+            "PMMA-MaCFP_STA_N2_10K_R5",
+            "PMMA-MaCFP_STA_N2_10K_R6",
+            "PMMA-MaCFP_STA_N2_10K_R7",
+            "PMMA-MaCFP_STA_N2_10K_R8",
+            "PMMA-MaCFP_STA_N2_10K_R9"
+        ],
+        "Peak Heat Flow (W/g)": 3.095,
+        "Uc Peak Heat Flow (W/g)": 1.073,
+        "DSC T_peak (K)": 640.2,
+        "Uc DSC T_peak (K)": 9.425,
+        "DSC T_onset (K)": 418.7,
+        "Uc DSC T_onset (K)": 201.6
+    }
 }

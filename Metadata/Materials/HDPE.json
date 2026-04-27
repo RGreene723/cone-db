@@ -1,0 +1,111 @@
+{
+    "Common Names": "High Density Polyethylene",
+    "Material ID": "HDPE",
+    "CAS Number": null,
+    "Trade Name": "Polystone G Natural HDPE",
+    "Model Number": null,
+    "Manufacturer": "Rochling Engineering Plastics",
+    "Country of Origin": null,
+    "Distributor / Harvesting Site": "Modern Plastics",
+    "Date Acquired": "January 2020",
+    "Description": {
+        "Color": "White",
+        "Shape": null,
+        "Finish": "Smooth Finish",
+        "Form": null,
+        "Thickness": "6.15-6.30mm",
+        "Notes": null
+    },
+    "Categories": {
+        "Synthetic/ Natural/ Vegetation": "Synthetic",
+        "Copolymer/ Homopolymer/ Composite": "Homopolymer",
+        "Thermoset/ Thermoplastic": "Thermoplastic",
+        "Composite Layers": null,
+        "Additives": {
+            "Plasticizers": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Stabilizer": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Flame Retardant": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Colorant": {
+                "Name": null,
+                "Weight %": null
+            },
+            "UV Stabilizer": {
+                "Name": null,
+                "Weight %": null
+            }
+        }
+    },
+    "Molecular Weight": null,
+    "HDPE_STA_N2_10K_TGA": {
+        "Experiments": [
+            "HDPE_STA_N2_10K_R1",
+            "HDPE_STA_N2_10K_R2",
+            "HDPE_STA_N2_10K_R3",
+            "HDPE_STA_N2_10K_R4",
+            "HDPE_STA_N2_10K_R5",
+            "HDPE_STA_N2_10K_R6"
+        ],
+        "Peak MLR (1/s)": 0.005019,
+        "Uc Peak MLR (1/s)": 5.161e-05,
+        "TGA T_peak (K)": 758.3,
+        "Uc TGA T_peak (K)": 0.5164,
+        "TGA T_onset (K)": 677.8,
+        "Uc TGA T_onset (K)": 1.084,
+        "T_endset (K)": 783.9,
+        "Uc T_endset (K)": 0.3764,
+        "Mass at Onset (%)": 99.3,
+        "Uc Mass at Onset (%)": 0.16,
+        "Residue Yield (%)": 0.3002,
+        "Uc Residue Yield (%)": 0.1776
+    },
+    "HDPE_STA_N2_10K_DSC": {
+        "Experiments": [
+            "HDPE_STA_N2_10K_R1",
+            "HDPE_STA_N2_10K_R2",
+            "HDPE_STA_N2_10K_R3",
+            "HDPE_STA_N2_10K_R4",
+            "HDPE_STA_N2_10K_R5",
+            "HDPE_STA_N2_10K_R6"
+        ],
+        "Peak Heat Flow (W/g)": 2.867,
+        "Uc Peak Heat Flow (W/g)": 0.1768,
+        "DSC T_peak (K)": 407.2,
+        "Uc DSC T_peak (K)": 0.8165,
+        "DSC T_onset (K)": 309.8,
+        "Uc DSC T_onset (K)": 1.366
+    },
+    "HDPE_OEA_CHNS": {
+        "Experiments": [
+            "HDPE_OEA_CHNS_Unk_R1.json",
+            "HDPE_OEA_CHNS_Unk_R2.json",
+            "HDPE_OEA_CHNS_Unk_R3.json"
+        ],
+        "Carbon (wt.%)": 86.1,
+        "Uc Carbon (wt.%)": 1.88,
+        "Hydrogen (wt.%)": 14.34,
+        "Uc Hydrogen (wt.%)": 0.32,
+        "Nitrogen (wt.%)": 0.0,
+        "Uc Nitrogen (wt.%)": null,
+        "Sulfur (wt.%)": 0.0,
+        "Uc Sulfur (wt.%)": null
+    },
+    "HDPE_OEA_O": {
+        "Experiments": [
+            "HDPE_OEA_O_Unk_R1.json",
+            "HDPE_OEA_O_Unk_R2.json",
+            "HDPE_OEA_O_Unk_R3.json"
+        ],
+        "Oxygen (wt.%)": 0.34,
+        "Uc Oxygen (wt.%)": 0.06
+    },
+    "HDPE_Cone_50kW_hor": {}
+}

@@ -1,0 +1,119 @@
+{
+    "Common Names": "poly(acrylonitrile butadiene styrene)",
+    "Material ID": "ABS",
+    "CAS Number": null,
+    "Trade Name": "King KPC ABS",
+    "Model Number": null,
+    "Manufacturer": "King Plastics",
+    "Country of Origin": null,
+    "Distributor / Harvesting Site": "Piedmont Plastics",
+    "Date Acquired": "March 2022",
+    "Description": {
+        "Color": "Natural (beige) ABS",
+        "Shape": null,
+        "Finish": "Smooth Finish",
+        "Form": null,
+        "Thickness": "6.1-6.3mm",
+        "Notes": null
+    },
+    "Categories": {
+        "Synthetic/ Natural/ Vegetation": "Synthetic",
+        "Copolymer/ Homopolymer/ Composite": "Copolymer",
+        "Thermoset/ Thermoplastic": "Thermoplastic",
+        "Composite Layers": null,
+        "Additives": {
+            "Plasticizers": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Stabilizer": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Flame Retardant": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Colorant": {
+                "Name": null,
+                "Weight %": null
+            },
+            "UV Stabilizer": {
+                "Name": null,
+                "Weight %": null
+            }
+        }
+    },
+    "Molecular Weight": null,
+    "ABS_STA_N2_10K_TGA": {
+        "Experiments": [
+            "ABS_STA_N2_10K_R1",
+            "ABS_STA_N2_10K_R10",
+            "ABS_STA_N2_10K_R2",
+            "ABS_STA_N2_10K_R3",
+            "ABS_STA_N2_10K_R4",
+            "ABS_STA_N2_10K_R5",
+            "ABS_STA_N2_10K_R6",
+            "ABS_STA_N2_10K_R7",
+            "ABS_STA_N2_10K_R8",
+            "ABS_STA_N2_10K_R9"
+        ],
+        "Peak MLR (1/s)": 0.002986,
+        "Uc Peak MLR (1/s)": 2.38e-05,
+        "TGA T_peak (K)": 707.2,
+        "Uc TGA T_peak (K)": 0.4216,
+        "TGA T_onset (K)": 598.8,
+        "Uc TGA T_onset (K)": 4.165,
+        "T_endset (K)": 776.0,
+        "Uc T_endset (K)": 0.7817,
+        "Mass at Onset (%)": 98.13,
+        "Uc Mass at Onset (%)": 0.8249,
+        "Residue Yield (%)": 1.026,
+        "Uc Residue Yield (%)": 0.8576
+    },
+    "ABS_STA_N2_10K_DSC": {
+        "Experiments": [
+            "ABS_STA_N2_10K_R1",
+            "ABS_STA_N2_10K_R10",
+            "ABS_STA_N2_10K_R2",
+            "ABS_STA_N2_10K_R3",
+            "ABS_STA_N2_10K_R4",
+            "ABS_STA_N2_10K_R5",
+            "ABS_STA_N2_10K_R6",
+            "ABS_STA_N2_10K_R7",
+            "ABS_STA_N2_10K_R8",
+            "ABS_STA_N2_10K_R9"
+        ],
+        "Peak Heat Flow (W/g)": 2.633,
+        "Uc Peak Heat Flow (W/g)": 0.225,
+        "DSC T_peak (K)": 705.4,
+        "Uc DSC T_peak (K)": 0.9189,
+        "DSC T_onset (K)": 658.1,
+        "Uc DSC T_onset (K)": 9.821
+    },
+    "ABS_OEA_CHNS": {
+        "Experiments": [
+            "ABS_OEA_CHNS_Unk_R1.json",
+            "ABS_OEA_CHNS_Unk_R2.json",
+            "ABS_OEA_CHNS_Unk_R3.json"
+        ],
+        "Carbon (wt.%)": 84.59,
+        "Uc Carbon (wt.%)": 1.71,
+        "Hydrogen (wt.%)": 8.13,
+        "Uc Hydrogen (wt.%)": 0.17,
+        "Nitrogen (wt.%)": 5.4,
+        "Uc Nitrogen (wt.%)": 0.11,
+        "Sulfur (wt.%)": 0.0,
+        "Uc Sulfur (wt.%)": null
+    },
+    "ABS_OEA_O": {
+        "Experiments": [
+            "ABS_OEA_O_Unk_R1.json",
+            "ABS_OEA_O_Unk_R2.json",
+            "ABS_OEA_O_Unk_R3.json"
+        ],
+        "Oxygen (wt.%)": 0.96,
+        "Uc Oxygen (wt.%)": 0.03
+    },
+    "ABS_Cone_50kW_hor": {}
+}

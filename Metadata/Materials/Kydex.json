@@ -1,0 +1,107 @@
+{
+    "Common Names": "PVC-PMMA alloy",
+    "Material ID": "Kydex",
+    "CAS Number": null,
+    "Trade Name": "Kydex 100",
+    "Model Number": null,
+    "Manufacturer": "Sekisui",
+    "Country of Origin": null,
+    "Distributor / Harvesting Site": "Laird Plastics",
+    "Date Acquired": "February 2020",
+    "Description": {
+        "Color": "'Pinstripe Gray'",
+        "Shape": null,
+        "Finish": "smooth finish (front) with haircell texture (back)",
+        "Form": null,
+        "Thickness": "6.4-7.0mm",
+        "Notes": null
+    },
+    "Categories": {
+        "Synthetic/ Natural/ Vegetation": "Synthetic Polymer",
+        "Copolymer/ Homopolymer/ Composite": null,
+        "Thermoset/ Thermoplastic": "Thermoplastic",
+        "Composite Layers": null,
+        "Additives": {
+            "Plasticizers": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Stabilizer": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Flame Retardant": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Colorant": {
+                "Name": null,
+                "Weight %": null
+            },
+            "UV Stabilizer": {
+                "Name": null,
+                "Weight %": null
+            }
+        }
+    },
+    "Molecular Weight": null,
+    "Kydex_STA_N2_10K_TGA": {
+        "Experiments": [
+            "Kydex_STA_N2_10K_R1",
+            "Kydex_STA_N2_10K_R10",
+            "Kydex_STA_N2_10K_R11",
+            "Kydex_STA_N2_10K_R12",
+            "Kydex_STA_N2_10K_R13",
+            "Kydex_STA_N2_10K_R14",
+            "Kydex_STA_N2_10K_R15",
+            "Kydex_STA_N2_10K_R16",
+            "Kydex_STA_N2_10K_R2",
+            "Kydex_STA_N2_10K_R3",
+            "Kydex_STA_N2_10K_R4",
+            "Kydex_STA_N2_10K_R5",
+            "Kydex_STA_N2_10K_R6",
+            "Kydex_STA_N2_10K_R7",
+            "Kydex_STA_N2_10K_R8",
+            "Kydex_STA_N2_10K_R9"
+        ],
+        "Peak MLR (1/s)": 0.001887,
+        "Uc Peak MLR (1/s)": 8.736e-05,
+        "TGA T_peak (K)": 561.7,
+        "Uc TGA T_peak (K)": 0.5072,
+        "TGA T_onset (K)": 486.1,
+        "Uc TGA T_onset (K)": 3.677,
+        "T_endset (K)": 856.5,
+        "Uc T_endset (K)": 96.92,
+        "Mass at Onset (%)": 99.3,
+        "Uc Mass at Onset (%)": 0.3151,
+        "Residue Yield (%)": 11.75,
+        "Uc Residue Yield (%)": 0.3977
+    },
+    "Kydex_STA_N2_10K_DSC": {
+        "Experiments": [
+            "Kydex_STA_N2_10K_R1",
+            "Kydex_STA_N2_10K_R10",
+            "Kydex_STA_N2_10K_R11",
+            "Kydex_STA_N2_10K_R12",
+            "Kydex_STA_N2_10K_R13",
+            "Kydex_STA_N2_10K_R14",
+            "Kydex_STA_N2_10K_R15",
+            "Kydex_STA_N2_10K_R16",
+            "Kydex_STA_N2_10K_R2",
+            "Kydex_STA_N2_10K_R3",
+            "Kydex_STA_N2_10K_R4",
+            "Kydex_STA_N2_10K_R5",
+            "Kydex_STA_N2_10K_R6",
+            "Kydex_STA_N2_10K_R7",
+            "Kydex_STA_N2_10K_R8",
+            "Kydex_STA_N2_10K_R9"
+        ],
+        "Peak Heat Flow (W/g)": 1.164,
+        "Uc Peak Heat Flow (W/g)": 0.1613,
+        "DSC T_peak (K)": 560.0,
+        "Uc DSC T_peak (K)": 0.5164,
+        "DSC T_onset (K)": 307.3,
+        "Uc DSC T_onset (K)": 1.455
+    },
+    "Kydex_Cone_50kW_hor": {}
+}

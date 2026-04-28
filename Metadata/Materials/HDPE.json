@@ -17,6 +17,7 @@
         "Notes": null
     },
     "Categories": {
+        "NFIRS": "Plastic",
         "Synthetic/ Natural/ Vegetation": "Synthetic",
         "Copolymer/ Homopolymer/ Composite": "Homopolymer",
         "Thermoset/ Thermoplastic": "Thermoplastic",
@@ -107,5 +108,28 @@
         "Oxygen (wt.%)": 0.34,
         "Uc Oxygen (wt.%)": 0.06
     },
-    "HDPE_Cone_50kW_hor": {}
+    "HDPE_50kW_hor": {},
+    "HDPE_MCC_N2_10K": {
+        "Experiments": [
+            "HDPE_MCC_N2_10K_R1",
+            "HDPE_MCC_N2_10K_R2",
+            "HDPE_MCC_N2_10K_R3"
+        ],
+        "Peak HRR (W/g)": 315.8,
+        "Uc Peak HRR (W/g)": 13.9,
+        "T_peak (K)": 752.0,
+        "Uc T_peak (K)": 1.0,
+        "T_Onset (K)": 721.2,
+        "Uc T_Onset (K)": 0.5774,
+        "T_Endset (K)": 762.5,
+        "Uc T_Endset (K)": 0.0,
+        "Heat Of Combustion (kJ/g)": 45.67,
+        "Uc Heat Of Combustion (kJ/g)": 0.1155,
+        "Heat Release Capacity (J/gK)": 1884.0,
+        "Uc Heat Release Capacity (J/gK)": 78.45,
+        "Fire Growth Capacity (-)": 1213.0,
+        "Uc Fire Growth Capacity (-)": 19.3,
+        "Residue Yield (%)": 0.0,
+        "Uc Residue Yield (%)": 0.0
+    }
 }

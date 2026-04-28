@@ -17,6 +17,7 @@
         "Notes": "Cell-cast"
     },
     "Categories": {
+        "NFIRS": "Plastic",
         "Synthetic/ Natural/ Vegetation": "Synthetic",
         "Copolymer/ Homopolymer/ Composite": "Homopolymer",
         "Thermoset/ Thermoplastic": "Thermoplastic",
@@ -120,5 +121,6 @@
         "Uc DSC T_peak (K)": 9.425,
         "DSC T_onset (K)": 418.7,
         "Uc DSC T_onset (K)": 201.6
-    }
+    },
+    "PMMA-MaCFP_MCC_N2_60K": {}
 }

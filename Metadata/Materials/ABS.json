@@ -17,6 +17,7 @@
         "Notes": null
     },
     "Categories": {
+        "NFIRS": "Plastic",
         "Synthetic/ Natural/ Vegetation": "Synthetic",
         "Copolymer/ Homopolymer/ Composite": "Copolymer",
         "Thermoset/ Thermoplastic": "Thermoplastic",
@@ -115,5 +116,28 @@
         "Oxygen (wt.%)": 0.96,
         "Uc Oxygen (wt.%)": 0.03
     },
-    "ABS_Cone_50kW_hor": {}
+    "ABS_50kW_hor": {},
+    "ABS_MCC_N2_10K": {
+        "Experiments": [
+            "ABS_MCC_N2_10K_R1",
+            "ABS_MCC_N2_10K_R2",
+            "ABS_MCC_N2_10K_R3"
+        ],
+        "Peak HRR (W/g)": 121.2,
+        "Uc Peak HRR (W/g)": 1.501,
+        "T_peak (K)": 696.8,
+        "Uc T_peak (K)": 0.5774,
+        "T_Onset (K)": 653.2,
+        "Uc T_Onset (K)": 1.528,
+        "T_Endset (K)": 738.2,
+        "Uc T_Endset (K)": 0.5774,
+        "Heat Of Combustion (kJ/g)": 37.43,
+        "Uc Heat Of Combustion (kJ/g)": 0.7572,
+        "Heat Release Capacity (J/gK)": 721.9,
+        "Uc Heat Release Capacity (J/gK)": 8.105,
+        "Fire Growth Capacity (-)": 545.7,
+        "Uc Fire Growth Capacity (-)": 6.286,
+        "Residue Yield (%)": 0.0,
+        "Uc Residue Yield (%)": 0.0
+    }
 }

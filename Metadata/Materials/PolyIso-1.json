@@ -17,6 +17,7 @@
         "Notes": "Yellow polyiso foam core bonded to Kraft-paper-reinforced aluminum facers on each side; both sides have a reflective surface; nominal thickness 1in. (24.3 to 24.6 mm)"
     },
     "Categories": {
+        "NFIRS": "Plastic",
         "Synthetic/ Natural/ Vegetation": "Synthetic",
         "Copolymer/ Homopolymer/ Composite": null,
         "Thermoset/ Thermoplastic": "Thermoset",

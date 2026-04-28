@@ -17,6 +17,7 @@
         "Notes": null
     },
     "Categories": {
+        "NFIRS": "Plastic",
         "Synthetic/ Natural/ Vegetation": "Synthetic Polymer",
         "Copolymer/ Homopolymer/ Composite": "Copolymer",
         "Thermoset/ Thermoplastic": "Thermoplastic",
@@ -159,5 +160,6 @@
         "Uc Ignition Energy (MJ/m2)": 0.05774,
         "t_flameout (s)": 313.0,
         "Uc t_flameout (s)": 55.75
-    }
+    },
+    "HIPS_MCC_N2_10K": {}
 }

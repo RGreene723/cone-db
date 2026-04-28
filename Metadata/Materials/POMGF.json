@@ -23,6 +23,7 @@
         "Notes": "Natural POM, white & Smooth finish, reinforced with 20 wt. % chopped glass fibers"
     },
     "Categories": {
+        "NFIRS": "Plastic",
         "Synthetic/ Natural/ Vegetation": "Synthetic",
         "Copolymer/ Homopolymer/ Composite": "Composite",
         "Thermoset/ Thermoplastic": "Thermoplastic",
@@ -141,5 +142,28 @@
         "Uc Ignition Energy (MJ/m2)": 0.781,
         "t_flameout (s)": 743.0,
         "Uc t_flameout (s)": 185.6
+    },
+    "POMGF_MCC_N2_60K": {
+        "Experiments": [
+            "POMGF_MCC_N2_60K_R1",
+            "POMGF_MCC_N2_60K_R2",
+            "POMGF_MCC_N2_60K_R3"
+        ],
+        "Peak HRR (W/g)": 232.8,
+        "Uc Peak HRR (W/g)": 17.42,
+        "T_peak (K)": 684.5,
+        "Uc T_peak (K)": 2.646,
+        "T_Onset (K)": 595.2,
+        "Uc T_Onset (K)": 9.074,
+        "T_Endset (K)": 711.7,
+        "Uc T_Endset (K)": 3.215,
+        "Heat Of Combustion (kJ/g)": 11.8,
+        "Uc Heat Of Combustion (kJ/g)": 4.351e-15,
+        "Heat Release Capacity (J/gK)": 231.1,
+        "Uc Heat Release Capacity (J/gK)": 17.42,
+        "Fire Growth Capacity (-)": 141.6,
+        "Uc Fire Growth Capacity (-)": 4.692,
+        "Residue Yield (%)": 0.2,
+        "Uc Residue Yield (%)": 6.799e-17
     }
 }

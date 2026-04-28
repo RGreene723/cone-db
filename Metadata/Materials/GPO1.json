@@ -1,0 +1,178 @@
+{
+    "Common Names": "Glastic",
+    "Material ID": "GPO1",
+    "CAS Number": null,
+    "Trade Name": "Glastic",
+    "Model Number": null,
+    "Manufacturer": " Haysite Reinforced Plastics",
+    "Country of Origin": null,
+    "Distributor / Harvesting Site": "Professional Plastics",
+    "Date Acquired": "January 2020",
+    "Description": {
+        "Color": "Tan color",
+        "Shape": null,
+        "Finish": "Matte Finish",
+        "Form": null,
+        "Thickness": "6.2-6.6mm",
+        "Notes": "Glass-reinforced polyester resin"
+    },
+    "Categories": {
+        "NFIRS": "Plastic",
+        "Synthetic/ Natural/ Vegetation": "Synthetic",
+        "Copolymer/ Homopolymer/ Composite": "Composite",
+        "Thermoset/ Thermoplastic": "Thermoset",
+        "Composite Layers": null,
+        "Additives": {
+            "Plasticizers": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Stabilizer": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Flame Retardant": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Colorant": {
+                "Name": null,
+                "Weight %": null
+            },
+            "UV Stabilizer": {
+                "Name": null,
+                "Weight %": null
+            }
+        }
+    },
+    "Molecular Weight": null,
+    "GPO1_STA_N2_10K_TGA": {
+        "Experiments": [
+            "GPO1_STA_N2_10K_R1",
+            "GPO1_STA_N2_10K_R10",
+            "GPO1_STA_N2_10K_R11",
+            "GPO1_STA_N2_10K_R12",
+            "GPO1_STA_N2_10K_R13",
+            "GPO1_STA_N2_10K_R14",
+            "GPO1_STA_N2_10K_R15",
+            "GPO1_STA_N2_10K_R2",
+            "GPO1_STA_N2_10K_R3",
+            "GPO1_STA_N2_10K_R4",
+            "GPO1_STA_N2_10K_R5",
+            "GPO1_STA_N2_10K_R6",
+            "GPO1_STA_N2_10K_R7",
+            "GPO1_STA_N2_10K_R8",
+            "GPO1_STA_N2_10K_R9"
+        ],
+        "Peak MLR (1/s)": 0.0008535,
+        "Uc Peak MLR (1/s)": 2.539e-05,
+        "TGA T_peak (K)": 676.8,
+        "Uc TGA T_peak (K)": 0.6172,
+        "TGA T_onset (K)": 464.1,
+        "Uc TGA T_onset (K)": 46.72,
+        "T_endset (K)": 1077.0,
+        "Uc T_endset (K)": 89.48,
+        "Mass at Onset (%)": 99.22,
+        "Uc Mass at Onset (%)": 0.7728,
+        "Residue Yield (%)": 55.13,
+        "Uc Residue Yield (%)": 5.734
+    },
+    "GPO1_STA_N2_10K_DSC": {
+        "Experiments": [
+            "GPO1_STA_N2_10K_R1",
+            "GPO1_STA_N2_10K_R10",
+            "GPO1_STA_N2_10K_R11",
+            "GPO1_STA_N2_10K_R12",
+            "GPO1_STA_N2_10K_R13",
+            "GPO1_STA_N2_10K_R14",
+            "GPO1_STA_N2_10K_R15",
+            "GPO1_STA_N2_10K_R2",
+            "GPO1_STA_N2_10K_R3",
+            "GPO1_STA_N2_10K_R4",
+            "GPO1_STA_N2_10K_R5",
+            "GPO1_STA_N2_10K_R6",
+            "GPO1_STA_N2_10K_R7",
+            "GPO1_STA_N2_10K_R8",
+            "GPO1_STA_N2_10K_R9"
+        ],
+        "Peak Heat Flow (W/g)": 1.858,
+        "Uc Peak Heat Flow (W/g)": 0.9886,
+        "DSC T_peak (K)": 995.1,
+        "Uc DSC T_peak (K)": 34.69,
+        "DSC T_onset (K)": 813.3,
+        "Uc DSC T_onset (K)": 422.3
+    },
+    "GPO1_Cone_50kW_hor": {
+        "Experiments": [
+            "GPO1_50kW_hor_R1",
+            "GPO1_50kW_hor_R2"
+        ],
+        "t_ignition (s)": 81.0,
+        "Uc t_ignition (s)": 16.97,
+        "m_ignition (g)": 117.1,
+        "Uc m_ignition (g)": null,
+        "Residue Yield (%)": -1.234,
+        "Uc Residue Yield (%)": -0.4151,
+        "Average HRRPUA 60s (kW/m2)": 214.1,
+        "Uc Average HRRPUA 60s (kW/m2)": 18.14,
+        "Average HRRPUA 180s (kW/m2)": 267.4,
+        "Uc Average HRRPUA 180s (kW/m2)": 47.85,
+        "Average HRRPUA 300s (kW/m2)": 251.0,
+        "Uc Average HRRPUA 300s (kW/m2)": 9.216,
+        "Steady Burning MLRPUA (g/s-m2)": 14.94,
+        "Uc Steady Burning MLRPUA (g/s-m2)": null,
+        "Peak MLRPUA (g/s-m2)": 214.4,
+        "Uc Peak MLRPUA (g/s-m2)": null,
+        "Steady Burning HRRPUA (kW/m2)": 134.3,
+        "Uc Steady Burning HRRPUA (kW/m2)": 22.05,
+        "Peak HRRPUA (kW/m2)": 327.3,
+        "Uc Peak HRRPUA (kW/m2)": 57.28,
+        "Total Heat Release (MJ/m2)": 90.0,
+        "Uc Total Heat Release (MJ/m2)": 0.6447,
+        "Average HoC (MJ/kg)": 7.758,
+        "Uc Average HoC (MJ/kg)": 0.5683,
+        "Average Specific Extinction Area (m2/kg)": 0.01307,
+        "Uc Average Specific Extinction Area (m2/kg)": 0.0007315,
+        "Smoke Production Pre-ignition (m2/m2)": 0.004278,
+        "Uc Smoke Production Pre-ignition (m2/m2)": 0.0158,
+        "Smoke Production Post-ignition (m2/m2)": 0.1598,
+        "Uc Smoke Production Post-ignition (m2/m2)": 0.04959,
+        "Smoke Production Total (m2/m2)": 0.1641,
+        "Uc Smoke Production Total (m2/m2)": 0.03379,
+        "Y_Soot (g/g)": 1.649e-06,
+        "Uc Y_Soot (g/g)": 4.519e-07,
+        "Y_CO2 (g/g)": 0.6022,
+        "Uc Y_CO2 (g/g)": 0.009355,
+        "Y_CO (g/g)": 0.02349,
+        "Uc Y_CO (g/g)": 0.002559,
+        "Fire Growth Potential (m2/J)": 1.007e-06,
+        "Uc Fire Growth Potential (m2/J)": 3.439e-07,
+        "Ignition Energy (MJ/m2)": 4.05,
+        "Uc Ignition Energy (MJ/m2)": 0.8485,
+        "t_flameout (s)": 497.0,
+        "Uc t_flameout (s)": 76.37
+    },
+    "GPO1_MCC_N2_60K": {
+        "Experiments": [
+            "GPO1_MCC_N2_60K_R1",
+            "GPO1_MCC_N2_60K_R2",
+            "GPO1_MCC_N2_60K_R3"
+        ],
+        "Peak HRR (W/g)": 170.2,
+        "Uc Peak HRR (W/g)": 7.351,
+        "T_peak (K)": 704.0,
+        "Uc T_peak (K)": 1.0,
+        "T_Onset (K)": 635.8,
+        "Uc T_Onset (K)": 3.055,
+        "T_Endset (K)": 729.8,
+        "Uc T_Endset (K)": 0.5774,
+        "Heat Of Combustion (kJ/g)": 8.9,
+        "Uc Heat Of Combustion (kJ/g)": 0.3464,
+        "Heat Release Capacity (J/gK)": 168.8,
+        "Uc Heat Release Capacity (J/gK)": 7.433,
+        "Fire Growth Capacity (-)": 121.2,
+        "Uc Fire Growth Capacity (-)": 5.841,
+        "Residue Yield (%)": 0.6,
+        "Uc Residue Yield (%)": 0.0
+    }
+}

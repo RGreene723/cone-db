@@ -17,6 +17,7 @@
         "Notes": "Pink XPS foam board"
     },
     "Categories": {
+        "NFIRS": "Plastic",
         "Synthetic/ Natural/ Vegetation": "Synthetic",
         "Copolymer/ Homopolymer/ Composite": null,
         "Thermoset/ Thermoplastic": "Thermoplastic",

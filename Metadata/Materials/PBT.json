@@ -17,6 +17,7 @@
         "Notes": null
     },
     "Categories": {
+        "NFIRS": "Plastic",
         "Synthetic/ Natural/ Vegetation": "Synthetic Polymer",
         "Copolymer/ Homopolymer/ Composite": "Homopolymer",
         "Thermoset/ Thermoplastic": "Thermoplastic",
@@ -133,5 +134,28 @@
         "Uc Ignition Energy (MJ/m2)": 0.7024,
         "t_flameout (s)": 507.0,
         "Uc t_flameout (s)": 232.0
+    },
+    "PBT_MCC_N2_60K": {
+        "Experiments": [
+            "PBT_MCC_N2_60K_R1",
+            "PBT_MCC_N2_60K_R2",
+            "PBT_MCC_N2_60K_R3"
+        ],
+        "Peak HRR (W/g)": 592.2,
+        "Uc Peak HRR (W/g)": 34.56,
+        "T_peak (K)": 703.3,
+        "Uc T_peak (K)": 0.5774,
+        "T_Onset (K)": 671.5,
+        "Uc T_Onset (K)": 2.646,
+        "T_Endset (K)": 722.3,
+        "Uc T_Endset (K)": 0.5774,
+        "Heat Of Combustion (kJ/g)": 22.33,
+        "Uc Heat Of Combustion (kJ/g)": 0.1155,
+        "Heat Release Capacity (J/gK)": 588.7,
+        "Uc Heat Release Capacity (J/gK)": 34.23,
+        "Fire Growth Capacity (-)": 499.3,
+        "Uc Fire Growth Capacity (-)": 17.39,
+        "Residue Yield (%)": 0.1,
+        "Uc Residue Yield (%)": 3.399e-17
     }
 }

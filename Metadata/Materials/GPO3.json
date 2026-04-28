@@ -1,0 +1,170 @@
+{
+    "Common Names": "Redboard",
+    "Material ID": "GPO3",
+    "CAS Number": null,
+    "Trade Name": "Redboard",
+    "Model Number": null,
+    "Manufacturer": " Haysite Reinforced Plastics",
+    "Country of Origin": null,
+    "Distributor / Harvesting Site": "Professional Plastics",
+    "Date Acquired": "May 2019",
+    "Description": {
+        "Color": "red color",
+        "Shape": null,
+        "Finish": "Matte Finish",
+        "Form": null,
+        "Thickness": "6.1-6.4mm",
+        "Notes": "Glass-reinforced polyester resin, high arc and flame resistance"
+    },
+    "Categories": {
+        "NFIRS": "Plastic",
+        "Synthetic/ Natural/ Vegetation": "Synthetic",
+        "Copolymer/ Homopolymer/ Composite": "Composite",
+        "Thermoset/ Thermoplastic": "Thermoset",
+        "Additives": {
+            "Plasticizers": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Stabilizer": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Flame Retardant": {
+                "Name": null,
+                "Weight %": null
+            },
+            "Colorant": {
+                "Name": null,
+                "Weight %": null
+            },
+            "UV Stabilizer": {
+                "Name": null,
+                "Weight %": null
+            }
+        }
+    },
+    "Molecular Weight": null,
+    "GPO3_STA_N2_10K_TGA": {
+        "Experiments": [
+            "GPO3_STA_N2_10K_R1",
+            "GPO3_STA_N2_10K_R10",
+            "GPO3_STA_N2_10K_R11",
+            "GPO3_STA_N2_10K_R12",
+            "GPO3_STA_N2_10K_R2",
+            "GPO3_STA_N2_10K_R3",
+            "GPO3_STA_N2_10K_R5",
+            "GPO3_STA_N2_10K_R6",
+            "GPO3_STA_N2_10K_R7",
+            "GPO3_STA_N2_10K_R8",
+            "GPO3_STA_N2_10K_R9"
+        ],
+        "Peak MLR (1/s)": 0.0008295,
+        "Uc Peak MLR (1/s)": 3.754e-05,
+        "TGA T_peak (K)": 673.0,
+        "Uc TGA T_peak (K)": 0.7568,
+        "TGA T_onset (K)": 442.0,
+        "Uc TGA T_onset (K)": 20.2,
+        "T_endset (K)": 1034.0,
+        "Uc T_endset (K)": 94.7,
+        "Mass at Onset (%)": 99.84,
+        "Uc Mass at Onset (%)": 0.4112,
+        "Residue Yield (%)": 58.17,
+        "Uc Residue Yield (%)": 2.18
+    },
+    "GPO3_STA_N2_10K_DSC": {
+        "Experiments": [
+            "GPO3_STA_N2_10K_R1",
+            "GPO3_STA_N2_10K_R10",
+            "GPO3_STA_N2_10K_R11",
+            "GPO3_STA_N2_10K_R12",
+            "GPO3_STA_N2_10K_R2",
+            "GPO3_STA_N2_10K_R3",
+            "GPO3_STA_N2_10K_R5",
+            "GPO3_STA_N2_10K_R6",
+            "GPO3_STA_N2_10K_R7",
+            "GPO3_STA_N2_10K_R8",
+            "GPO3_STA_N2_10K_R9"
+        ],
+        "Peak Heat Flow (W/g)": 3.101,
+        "Uc Peak Heat Flow (W/g)": 0.6224,
+        "DSC T_peak (K)": 555.9,
+        "Uc DSC T_peak (K)": 3.197,
+        "DSC T_onset (K)": 422.9,
+        "Uc DSC T_onset (K)": 155.6
+    },
+    "GPO3_Cone_50kW_hor": {
+        "Experiments": [
+            "GPO3_50kW_hor_R1",
+            "GPO3_50kW_hor_R2"
+        ],
+        "t_ignition (s)": 452.5,
+        "Uc t_ignition (s)": 883.9,
+        "m_ignition (g)": 71.34,
+        "Uc m_ignition (g)": null,
+        "Residue Yield (%)": -1.217,
+        "Uc Residue Yield (%)": -0.4275,
+        "Average HRRPUA 60s (kW/m2)": 107.7,
+        "Uc Average HRRPUA 60s (kW/m2)": 50.33,
+        "Average HRRPUA 180s (kW/m2)": 85.37,
+        "Uc Average HRRPUA 180s (kW/m2)": 43.72,
+        "Average HRRPUA 300s (kW/m2)": 72.04,
+        "Uc Average HRRPUA 300s (kW/m2)": 42.99,
+        "Steady Burning MLRPUA (g/s-m2)": 7.037,
+        "Uc Steady Burning MLRPUA (g/s-m2)": null,
+        "Peak MLRPUA (g/s-m2)": 95.41,
+        "Uc Peak MLRPUA (g/s-m2)": null,
+        "Steady Burning HRRPUA (kW/m2)": 66.93,
+        "Uc Steady Burning HRRPUA (kW/m2)": 9.129,
+        "Peak HRRPUA (kW/m2)": 183.3,
+        "Uc Peak HRRPUA (kW/m2)": 42.77,
+        "Total Heat Release (MJ/m2)": 78.15,
+        "Uc Total Heat Release (MJ/m2)": 7.747,
+        "Average HoC (MJ/kg)": 6.905,
+        "Uc Average HoC (MJ/kg)": 0.9303,
+        "Average Specific Extinction Area (m2/kg)": 0.05348,
+        "Uc Average Specific Extinction Area (m2/kg)": 0.001252,
+        "Smoke Production Pre-ignition (m2/m2)": 0.1527,
+        "Uc Smoke Production Pre-ignition (m2/m2)": 0.4296,
+        "Smoke Production Post-ignition (m2/m2)": 0.2018,
+        "Uc Smoke Production Post-ignition (m2/m2)": 0.2756,
+        "Smoke Production Total (m2/m2)": 0.3544,
+        "Uc Smoke Production Total (m2/m2)": 0.7052,
+        "Y_Soot (g/g)": 3.667e-06,
+        "Uc Y_Soot (g/g)": 7.346e-06,
+        "Y_CO2 (g/g)": 0.5881,
+        "Uc Y_CO2 (g/g)": 0.0146,
+        "Y_CO (g/g)": 0.01608,
+        "Uc Y_CO (g/g)": 0.0006725,
+        "Fire Growth Potential (m2/J)": 1.271e-07,
+        "Uc Fire Growth Potential (m2/J)": 2.432e-07,
+        "Ignition Energy (MJ/m2)": 22.62,
+        "Uc Ignition Energy (MJ/m2)": 44.19,
+        "t_flameout (s)": 999.5,
+        "Uc t_flameout (s)": 41.01
+    },
+    "GPO3_MCC_N2_60K": {
+        "Experiments": [
+            "GPO3_MCC_N2_60K_R1",
+            "GPO3_MCC_N2_60K_R2",
+            "GPO3_MCC_N2_60K_R3",
+            "GPO3_MCC_N2_60K_R4"
+        ],
+        "Peak HRR (W/g)": 153.7,
+        "Uc Peak HRR (W/g)": 1.519,
+        "T_peak (K)": 701.1,
+        "Uc T_peak (K)": 3.948,
+        "T_Onset (K)": 640.2,
+        "Uc T_Onset (K)": 3.317,
+        "T_Endset (K)": 748.9,
+        "Uc T_Endset (K)": 6.5,
+        "Heat Of Combustion (kJ/g)": 7.3,
+        "Uc Heat Of Combustion (kJ/g)": 0.1633,
+        "Heat Release Capacity (J/gK)": 152.4,
+        "Uc Heat Release Capacity (J/gK)": 1.558,
+        "Fire Growth Capacity (-)": 88.38,
+        "Uc Fire Growth Capacity (-)": 2.685,
+        "Residue Yield (%)": 0.6,
+        "Uc Residue Yield (%)": 0.0
+    }
+}

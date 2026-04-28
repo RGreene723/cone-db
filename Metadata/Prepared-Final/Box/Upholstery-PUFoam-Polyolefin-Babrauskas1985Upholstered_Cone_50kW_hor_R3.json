@@ -1,16 +1,16 @@
 {
-    "Material ID": "Upholstery-PUFoamFR-Polyolefin-Babrauskas1985Upholstered",
-    "Material Name": "POLYOLEFIN/CA",
-    "Sample Mass (g)": 27.2,
+    "Material ID": "Upholstery-PUFoam-Polyolefin-Babrauskas1985Upholstered",
+    "Material Name": "POLYOLEFIN/N-CA",
+    "Sample Mass (g)": 27.4,
     "Residual Mass (g)": null,
-    "Replicate": 2,
-    "Original Testname": "test0166_0595_001",
-    "Testname": "Upholstery-PUFoamFR-Polyolefin-Babrauskas1985Upholstered_25kW_hor_R2",
+    "Replicate": 3,
+    "Original Testname": "test0162_0596_001",
+    "Testname": "Upholstery-PUFoam-Polyolefin-Babrauskas1985Upholstered_Cone_50kW_hor_R3",
     "Thickness (mm)": 50.0,
     "Sample Description": null,
     "Specimen Prep": null,
     "Instrument": "NBS Cone Calorimeter",
-    "Test Date": "1982-09-23",
+    "Test Date": "1982-09-09",
     "Test Time": null,
     "Operator": null,
     "Director": null,
@@ -22,13 +22,13 @@
     "Parsed": "2026-04-06 14:43:03",
     "Auto Prepared": null,
     "Manually Prepared": null,
-    "SmURF": "2026-04-27 11:07:39",
+    "SmURF": "2026-04-27 11:22:29",
     "Bad Data": null,
     "Autoprocessed": null,
     "Manually Reviewed Series": null,
     "Pass Review": null,
     "Published": null,
-    "Heat Flux (kW/m2)": 25,
+    "Heat Flux (kW/m2)": 50,
     "Orientation": "HORIZONTAL",
     "C Factor": null,
     "Surface Area (m2)": 0.01,
@@ -99,7 +99,7 @@
     "t_flameout (s)": null,
     "t_flameout Outlier": null,
     "Comments": [
-        "POLYOLEFIN/CA HORIZONTAL 2.5W/CM2 27.2# 9/23/82-166 (CAL.CONST. 129682.)"
+        "POLYOLEFIN/N-CA HORIZONTAL 5.0W/CM2 27.4s 9/9/82-162 (CAL.CONST. 128489.)"
     ],
     "Data Corrections": []
 }

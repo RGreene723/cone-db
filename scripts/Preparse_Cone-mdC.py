@@ -638,6 +638,7 @@ def parse_metadata(input,test_name):
     "Surface Area (m2)",
     "Grid",
     "Edge Frame",
+    "Ignition Source",
     "Separation (mm)",
     "Test Start Time (s)",
     "Test End Time (s)",
@@ -715,6 +716,10 @@ def parse_metadata(input,test_name):
         metadata_json["Heat Flux (kW/m2)"] = 0
     potential_mass_str =  metadata[slash_idx +4: dateidx]
     mass = get_number(potential_mass_str, "flt")
+    if "FRAME" in metadata:
+        metadata_json["Edge Frame"] = True
+    if "GRID" in metadata:
+        metadata_json["Grid"] = True
     if mass == None:
         mass_match = re.search(r'\((\d+(?:\.\d+)?)', metadata[:orient_idx])
         if mass_match:

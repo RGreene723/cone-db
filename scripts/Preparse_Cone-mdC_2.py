@@ -16,10 +16,9 @@ from utils import calculate_HRR, calculate_MFR, colorize
 SCRIPT_DIR = Path(__file__).resolve().parent         # .../coneDB/scripts
 PROJECT_ROOT = SCRIPT_DIR.parent             # .../coneDB 
 
-INPUT_DIR = PROJECT_ROOT / "data" / "raw" / "Box" / "md_B"### WILL BE FIREDATA IN BOX SUBFOLDER, (firedata/flammabilitydata/cone/Box/md_B)
-OUTPUT_DIR = PROJECT_ROOT / "data" / "preparsed" / "Box" / "md_B"
-LOG_FILE = PROJECT_ROOT / "preparse_md_B_log.json"
-
+INPUT_DIR = PROJECT_ROOT / "data" / "raw" / "Box" / "md_C_new"### WILL BE FIREDATA IN BOX SUBFOLDER, (firedata/flammabilitydata/cone/Box/md_B)
+OUTPUT_DIR = PROJECT_ROOT / "data" / "preparsed" / "Box" / "md_C"
+LOG_FILE = PROJECT_ROOT / "preparse_md_C_log_2.json"
 
 
 #region parse_dir
@@ -37,41 +36,26 @@ def parse_dir(input_dir):
     
     for path in paths:
         files_parsed += 1
-        try:
-            pct = parse_file(path)
-        except Exception as e:
-            with open(LOG_FILE, "r", encoding="utf-8") as w:  
-                logfile = json.load(w)
-            logfile.update({
-                    str(path) : str(e)
-                })
-            with open(LOG_FILE, "w", encoding="utf-8") as f:
-	            f.write(json.dumps(logfile, indent=4))
-
-            print(colorize(f" - Error parsing {path}: {e}\n", "red"))
-            #out_path = Path(str(path).replace('md_B', 'md_B_bad'))
-            #out_path.parent.mkdir(parents=True, exist_ok=True)
-            #shutil.move(path, out_path)
-            continue
+        pct = parse_file(path)
         out_path = False
         if pct == 100:
             print(colorize(f"Parsed {path} successfully\n", "green"))
             files_parsed_fully += 1
         elif pct == 0 or pct == None:
             print(colorize(f"{path} could not be parsed", "red"))
-            #out_path = Path(str(path).replace('md_B', 'md_B_bad'))
+            out_path = Path(str(path).replace('md_C', 'md_C_bad'))
         else:
             print(colorize(f'{pct}% of tests in {path} parsed succesfully\n', 'yellow'))
             files_parsed_partial += 1
-            #out_path = Path(str(path).replace('md_B', 'md_B_partial'))
+            out_path = Path(str(path).replace('md_C', 'md_C_partial'))
 
-        # If output path is set, ensure the directory exists and copy
+        ## If output path is set, ensure the directory exists and move
         #if out_path:
-         #   out_path.parent.mkdir(parents=True, exist_ok=True)
-          #  shutil.move(path, out_path)
+        #    out_path.parent.mkdir(parents=True, exist_ok=True)
+        #    shutil.move(path, out_path)
     print(colorize(f"Files pre-parsed fully: {files_parsed_fully}/{files_parsed} ({((files_parsed_fully)/files_parsed) * 100}%)", "blue"))
     print(colorize(f"Files pre-parsed partially: {files_parsed_partial}/{files_parsed} ({((files_parsed_partial)/files_parsed) * 100}%)", "blue"))
-    
+ 
     '''
     # printing number of lines read
     for filename in os.listdir(input_dir):
@@ -144,14 +128,13 @@ def parse_file(file_path):
             tb_list = traceback.extract_tb(e.__traceback__)
             fail = None
             for tb in reversed(tb_list):
-                if "Preparse_Cone-mdB" in tb.filename and "get_number" not in tb.name:
+                if "PH_preparse_md_C" in tb.filename and "get_number" not in tb.name:
                     fail = tb
                     break
             if not fail:
                 print(tb_list)
                 fail = tb_list[0] 
             location = f"{fail.filename.split("\\")[-1]}:{fail.lineno} ({fail.name})"
-            # log error in md_A_log
             with open(LOG_FILE, "r", encoding="utf-8") as w:  
                 logfile = json.load(w)
             logfile.update({
@@ -169,168 +152,301 @@ def parse_file(file_path):
 ####### separate tests in file #######
 #region get_tests
 # splits file in list of tests, stores as {tests} <key=test_number>
-def get_tests(file_contents):
-    test_number = -1
+'''''
+def get_tests(lines):
+    """
+    Returns: dict {test_key: [lines]}
+    - Metadata marks the start of a test.
+    - Gather all lines after metadata until next metadata or header line.
+    - If a header line is hit, those and any following lines are 'preamble'
+      for the next test (to be appended after its metadata).
+    """
     tests = {}
-    first_inst = False
-    for i in range(len(file_contents) - 2):
-        line = str(file_contents[i]).upper().strip()
-        test_match = re.search(r"\((\d{3,4})\)", line)
-        if test_match is not None:
-            raw = test_match.group(1)
-            # Check next 10 lines until hit a break criterion
-            for j in range(1, 11):  # lines i+1 to i+10
-                idx = i + j
-                if idx >= len(file_contents):
-                    break
-                line_after = file_contents[idx].upper().strip()
-                if "MAX" in line_after or "PARAMETER" in line_after:
-                    test_number = f"Test {raw.zfill(4)}"
-                    break
-                elif  "PAGE" in line_after or ";" in line_after:
-                    break
+    preamble = []
+    test_key = None
+    current_test_lines = []
+    last_delim = None
+    addtocurrent = False
 
+    def is_table_header_line(line):
+        return line.replace(" ", "").startswith("|TIME") and not any(
+            bad in line.upper() for bad in ('INDEX', 'VALUE', 'COLUMN', "YEAR", "PRESSURE", "WIND", "TEMPERATURE"))
 
+    for line in lines:
+        print(line)
+        meta_match = is_metadata_line(line)
+        if meta_match:
+           # print(line)
+            if last_delim == None:
+                print(last_delim)
+                print("extmeta")
+                # Metadata the first delimiter, start new test
+                test_number = meta_match.group(1)
+                test_key = f"test{test_number}"
+                # Insert preamble if we have it
+                current_test_lines = [line] + preamble
+                preamble = []
+                last_delim = 'ext_meta'
+                addtocurrent = True
+            elif last_delim == "ext_meta":
+                #SHOULD NEVER HAPPEN
+                pass
+            elif last_delim == "int_meta" or last_delim == "int_head":
+                #Previous delimter was internal metadata, so this is external for following test, order btwn tests flipped
+                #Or previous delimiter was an internal header, so this is external for the following test, order between tests consistent
+                print(last_delim)
+                print("extmeta")
+                tests[test_key] = current_test_lines
+                test_number = meta_match.group(1)
+                test_key = f"test{test_number}"
+                # Insert preamble if we have it
+                current_test_lines = [line] + preamble
+                preamble = []
+                last_delim = 'ext_meta'
+                addtocurrent = True 
+            elif last_delim == "ext_head":
+                #Previous delimiter was an external header, so this is an internal metadata
+                print(last_delim)
+                print("intmeta")
+                test_number = meta_match.group(1)
+                test_key = f"test{test_number}"
+                # Insert preamble if we have it
+                current_test_lines = [line] + preamble
+                preamble = []
+                last_delim = 'int_meta'
+                addtocurrent = True
 
-            ''''
-            line_after_two = file_contents[i + 2].upper().strip()
-            max_test = re.search(r"MAX", line_after_two)
-            param_test = re.search(r"PARAMETER", line_after_two)
-            raw = test_match.group(1)
-            # ensure this is a new test
-            if (max_test is not None) or (param_test is not None):
-                test_number = f"Test {raw.zfill(4)}"
-                # print(f"Match on line {i}: {line}")
-            #if not a new test make sure the same number
-            elif f"Test {raw.zfill(4)}" != test_number:
-                raise Exception("Likley typo in test numbers exist, please correct the markdown file.")
-            '''''
-        # adding lines to respective test/key
-        if test_number != -1:
-            if test_number in tests:
-                tests[test_number].append(line)
+           
+        elif is_table_header_line(line):
+           #print(line)
+            if last_delim == None:
+                print(last_delim)
+                print("exthead")
+                ###Data first
+                preamble.append(line)
+                addtocurrent = False
+                last_delim = 'ext_head'
+            elif last_delim == 'ext_meta':
+                print(last_delim)
+                print("inthead")
+                #Previous delimiter was external metadata, so this is internal table header
+                current_test_lines.append(line)
+                last_delim = 'int_head'
+            elif last_delim == 'int_meta' or last_delim =='int_head':
+                print(last_delim)
+                print("exthead")
+                #Previous delimiter was internal metadata, so this is external header, same order btwn tests
+                tests[test_key] = current_test_lines
+                current_test_lines = []
+                addtocurrent = False
+                last_delim = 'ext_head'
+                preamble.append(line)
+            elif last_delim =='ext_head':
+                #SHOULD NEVER HAPPEN
+                pass
+                 
+        else:
+            if addtocurrent:
+                current_test_lines.append(line)
             else:
-                tests[test_number] = [line]
+                preamble.append(line)
 
-    # add skipped last two lines to the last detected test
-    tests[test_number].append(str(file_contents[len(file_contents) - 2]).upper().strip())
-    tests[test_number].append(str(file_contents[len(file_contents) - 1]).upper().strip())
-
+    # Save last test if any
+    if test_key is not None and current_test_lines:
+        tests[test_key] = current_test_lines
+    elif preamble:
+        # If something is left over and not assigned, call it unlabeled
+        tests['UNLABELED'] = preamble
     print(tests.keys())
+    return tests
 
-    return tests    
-    
+    '''
+
+def get_tests(lines):
+    """
+    Returns: dict {test_key: [lines]}
+    - Metadata marks the start of a test.
+    - Gather all lines after metadata until next metadata or header line.
+    - If a header line is hit, those and any following lines are 'preamble'
+      for the next test (to be appended after its metadata).
+    """
+    tests = {}
+    preamble = []
+    test_key = None
+    current_test_lines = []
+    last_delim = None
+    addtocurrent = False
+    def is_metadata_line(line):
+        """
+        Detect if a line contains metadata:
+        - If "date-number" (e.g. 9/30/82-198): return (date, number)
+        - If just "date" (e.g. 9/30/82): return (date, "unk#")
+        - Else, return None
+        """
+        match = re.search(r'(\d{1,2}[/-]\d{1,2}[/-]\d{1,4})(?:-(\d{1,4}))?', line)
+        return match
+    def is_table_header_line(line):
+        return line.replace(" ", "").startswith("|TIME") and not any(
+            bad in line.upper() for bad in ('INDEX', 'VALUE', 'COLUMN', "YEAR", "PRESSURE", "WIND", "TEMPERATURE"))
+
+    for line in lines:
+        meta_match = is_metadata_line(line)
+
+        if meta_match:
+            if last_delim == None:
+                # Metadata the first delimiter, start new test
+                raw = meta_match.group(2)
+                if raw == None:
+                    test_number = "UNK"
+                else:
+                    test_number = raw.zfill(4)
+                test_key = f"Test {test_number}"
+                # Insert preamble if we have it
+                current_test_lines = [line] + preamble
+                preamble = []
+                last_delim = 'ext_meta'
+                addtocurrent = True
+            elif last_delim == "ext_meta":
+                #SHOULD NEVER HAPPEN UNLESS DUPLICATE
+                pass
+            elif last_delim == "int_meta" or last_delim == "int_head":
+                #Previous delimter was internal metadata, so this is external for following test, order btwn tests flipped
+                #Or previous delimiter was an internal header, so this is external for the following test, order between tests consistent
+                tests[test_key] = current_test_lines
+                raw= meta_match.group(2)
+                if raw == None:
+                    test_number = "UNK"
+                else:
+                    test_number = raw.zfill(4)
+                test_key = f"Test {test_number}"
+                # Insert preamble if we have it
+                current_test_lines = [line] + preamble
+                preamble = []
+                last_delim = 'ext_meta'
+                addtocurrent = True 
+            elif last_delim == "ext_head":
+                #Previous delimiter was an external header, so this is an internal metadata
+                raw = meta_match.group(2)
+                if raw == None:
+                    test_number = "UNK"
+                else:
+                    test_number = raw.zfill(4)
+                test_key = f"Test {test_number}"
+                # Insert preamble if we have it
+                current_test_lines = [line] + preamble
+                preamble = []
+                last_delim = 'int_meta'
+                addtocurrent = True
+
+           
+        elif is_table_header_line(line):
+           #print(line)
+            if last_delim == None:
+                ###Data first
+                preamble.append(line)
+                addtocurrent = False
+                last_delim = 'ext_head'
+            elif last_delim == 'ext_meta':
+                #Previous delimiter was external metadata, so this is internal table header
+                current_test_lines.append(line)
+                last_delim = 'int_head'
+            elif last_delim == 'int_meta' or last_delim =='int_head':
+                #Previous delimiter was internal metadata, so this is external header, same order btwn tests
+                tests[test_key] = current_test_lines
+                current_test_lines = []
+                addtocurrent = False
+                last_delim = 'ext_head'
+                preamble.append(line)
+            elif last_delim =='ext_head':
+                #SHOULD NEVER HAPPEN
+                pass
+                 
+        else:
+            if addtocurrent:
+                current_test_lines.append(line)
+            else:
+                preamble.append(line)
+
+    # Save last test if any
+    if test_key is not None and current_test_lines:
+        tests[test_key] = current_test_lines
+    elif preamble:
+        # If something is left over and not assigned, call it unlabeled
+        tests['UNLABELED'] = preamble
+    print(tests.keys())
+    if 'UNLABELED' in tests.keys() or "UNK" in tests.keys():
+        raise Exception("Likley typo in test numbers exist, please correct the markdown file.")
+    return tests
+
 
 ####### separate metadata from test data #######
 #region get_data
-#region get_data
 def get_data(data):
-    # data  = list of lines (test)
-    
+    # data: list of lines (test)
     dataStart = -1
-    dataEnd = -1
-    index = 0
-    #has_page = False
-    for i, line in enumerate(data):
-        line = str(line.upper())
-        time_index = line.find("TIME")
-        # if "times"
-        if ("TIMES" in line):
+    dataEnd = len(data)
+    # Find the start and end lines for the time-series table
+    for index, line in enumerate(data):
+        if not line.strip():
+            continue #get rid of whitespace lines
+        # Normalize line for easy matching
+        uline = line.upper().strip()
+        # Only match time-series table headers, not summary tables
+        # Require TIME and at least one key column typical of measurements
+        if (
+            (uline.startswith("|TIME") or uline.startswith("| TIME") or uline.startswith("TIME")) and
+            any(key in uline for key in ("SUM", "DOT", "H"))
+        ):
             if dataStart == -1:
-                 dataStart = index
-            #has_page = True
-        # if "time |"
-        elif (time_index != -1):
-            # check if | in vicinity
-            max_test = re.search(r"MAX", line)
-            param_test = re.search(r"PARAMETER", line)
-            for i in range(1,10):
-                if (time_index+i < len(line)) and str(line[time_index+i]) == "|" and (max_test is None) and (param_test is None):
-                    if dataStart == -1:
-                        dataStart = index
-                    #has_page = True
-                    break                    
-    
-        index += 1
+                dataStart = index
 
-    test_data = data[dataStart:]
+        # Mark ending of test data
+        if (index == len(data)):
+            dataEnd = index
+            break
+        prevline = uline
+    test_data = data[dataStart:dataEnd]
+    #print(f"{dataStart} to {dataEnd}")
+    metadata = data[:dataStart] + data[dataEnd:]
+    print(f"{dataStart} to {dataEnd}")
     filtered_test_data = []
     
     for line in test_data:
-        if any(bad in line for bad in ('TEST', 'PAGE', 'HOR', 'VERT', "MO=", "MF=", "IGN")):
+        uline = line.upper().strip()
+        # Remove Page Headers if they have in table
+        if any(bad in uline for bad in ('TEST', 'PAGE', 'HOR', 'VERT')):
             continue
         # Remove markdown delimiter rows like |---|---|---|...| or just ---... or lines with only pipes/spaces/hyphens
         if (line.strip().replace('-', '').replace('|', '').replace(' ', '') == '') \
            and ('-' in line or '|' in line):
             continue
         #Remove only unit rows
-        if any(unit in line for unit in ("S", "SEC","KG","M2","M3","KW","KJ")) and not any(header in line for header in ("TIME","DOT", "H", "SUM", "MASS","CO", "AREA", "DUCT")):
+        if any(unit in uline for unit in ("S", "KG","M2","KW","KJ")) and not any(header in line for header in ("TIME", "H", "SUM", "MASS","CO", "AREA")):
+            continue
+        #Remove False Headers 
+        if any(bad in uline for bad in ('INDEX', 'VALUE', 'COLUMN', "YEAR", "PRESSURE", "WIND", "TEMPERATURE")):
             continue
         # Optionally: remove lines that are only spaces
-        if not line.strip():
+        if not uline.strip():
             continue
         filtered_test_data.append(line)
-    #for i, row in enumerate(filtered_test_data):
-     #   print(f"ROW {i} ({len(row.split('|'))} cols):", row)
-
-
-    #print(f"{dataStart} to {dataEnd}")
-    metadata = data[:dataStart] + data[dataEnd:]
-    print(f"Data Table from {dataStart} to {dataEnd}")
+    #print(filtered_test_data[0])
     
-    # convert test_data to df
-    pd_format_test_data = StringIO("\n".join(test_data))
-    test_data_df = pd.read_csv(pd_format_test_data, sep="|")
-
+    #print(f"HEADER ({len(filtered_test_data[0].split('|'))} cols):", filtered_test_data[0])
+    #for i, row in enumerate(filtered_test_data[1:6]):
+    #    print(f"ROW {i} ({len(row.split('|'))} cols):", row)
+        # convert test_data to df
+        pd_format_test_data = StringIO("\n".join(filtered_test_data))
+    
+    #Majority of tests pipe delimited, but some are multispace delimited    
+    test_data_df = pd.read_csv(pd_format_test_data, sep="|", header= 0, engine = 'python')
     return test_data_df, metadata
 
 # outputting dataframe to csv file
 #region parse_data
 def parse_data(data_df,test,file_name):
     data_df = data_df.iloc[:, 1:-1]
-    
 
-    # extract indices of separate datatables
-    new_table_start = 0
-    col_idx = data_df.columns[0]
-    table_idx_list = []
-    for index,row in data_df.iterrows():
-        # new table starting where time is 0 again
-        if (index != 1) and (str(row[col_idx]).strip() == '0.'):
-            # find column header row
-            for i in range(1,5):
-                first_col_cell = str(data_df.iloc[index-i,0])
-                if "T" in first_col_cell.upper():
-                    new_table_start = index-i
-                    table_idx_list.append(index-i)
-                    break
-
-    for idx in range(len(table_idx_list)):
-        # save new datatable as df
-        if idx == (len(table_idx_list)-1):
-            new_table = data_df.iloc[table_idx_list[idx]:,1:]
-        else:
-            new_table = data_df.iloc[table_idx_list[idx]:table_idx_list[idx+1],1:]
-        # transform new table into additional columns
-        for col in new_table.columns:
-            #skip first row
-            if pd.notna(new_table.iloc[0][col]):
-                new_col_name = str(new_table.iloc[0][col]).strip()
-                #init new column and fill
-                data_df[new_col_name] = np.nan
-                data_df[new_col_name] = data_df[new_col_name].astype("object")  # make string-compatible
-                data_df.loc[0:(len(new_table)-2),new_col_name] = new_table.iloc[1:][col].values 
-
-    # remove new table(s) at original location
-    data_df.iloc[table_idx_list[0]:,:] = np.nan
-    print('-------------------------------------------------------')
-    df = data_df.copy()
-    query = 'AREA'
-    mask = df.apply(lambda row: row.astype(str).str.contains(query, case=False, na=False).any(), axis=1)
-    matching_rows = df[mask]
-    #print(matching_rows)   
-    #print(df[110:150])
-    print('-------------------------------------------------------------------')
     def delete_cells(col):
         # Convert to string, strip whitespace
         col_stripped = col.astype(str).str.strip()
@@ -354,7 +470,7 @@ def parse_data(data_df,test,file_name):
 
     # remove all miscellaneous cells
     data_df = data_df.apply(delete_cells)
-    print(data_df.columns)
+
     # remove unnecessary headers
     # data_df = data_df[~data_df.astype(str).apply(lambda row: row.str.contains("TIME", case=False, na=False).any(), axis=1)]
 
@@ -377,7 +493,7 @@ def parse_data(data_df,test,file_name):
     #generating contents for md_A_log
     with open(LOG_FILE, "r", encoding="utf-8") as w:  
         logfile = json.load(w)
-
+    #print(data_df)
     # checking validity of data parsing
     data_df_cols = data_df.iloc[:,:-1]
     column_counts = data_df_cols.count()
@@ -385,60 +501,44 @@ def parse_data(data_df,test,file_name):
         column_uniform = "Datatable columns are not uniform"
     else:
         column_uniform = "Datatable columns are uniform"
+    
+    
+    
     # update md_A_log based off uniformity of columns
     #logfile.update({
-   #         str(test_name) : f"{column_uniform} || #Col = {data_df.shape[1]}"
-    #    })
-
-
-     #Renaming Column Headers
+    #        str(test_name) : f"{column_uniform} || #Col = {data_df.shape[1]}"
+     #   })
+    
+    
+    #Renaming Column Headers
     for i, column in enumerate(data_df.columns):
         if "TIME" in column:
             data_df.columns.values[i] = "Time (s)"
-        elif "DOT" in column:
+        elif ("Q-DOT" in column and "SUM" not in column) or ("HEAT RELEASE" in column and "CUMULATIVE" not in column) :
             data_df.columns.values[i] = "HRRPUA (kW/m2)"
-        elif "SUM Q" in column:
+        elif "SUM" in column or "CUMULATIVE" in column:
             data_df.columns.values[i] = "THRPUA (MJ/m2)"
-        elif "MASS" in column and "LOSS" not in column:
-            data_df.columns.values[i] = "Mass (g)"
-        elif "M" in column and "LOSS" in column:
-            data_df.columns.values[i] = "MLR (g/s)"
-        elif "AIR" in  column:
-            data_df.columns.values[i] = "MFR (kg/s))"
-        elif "H" in column and "COM" in column:
+        elif "MASS" in column:
+            # Additional check: Is this column monotonically decreasing?
+            col_vals = pd.to_numeric(data_df[column], errors='coerce').dropna()
+            # Check monotonic decreasing
+            if (col_vals.diff().dropna() <= 0).all() and (col_vals != 0.0).all():
+                data_df.columns.values[i] = "Mass (kg)"
+            else:
+                data_df.columns.values[i] = "MLR (g/s)"
+        elif "COMB" in column or "EFFECTIVE" in column or "HEAT OF" in column:
             data_df.columns.values[i] = "HT Comb (MJ/kg)"
         elif "CO2" in column or "C02" in column:
             data_df.columns.values[i] = "CO2 (kg/kg)"
-        elif ("CO" in column or "C0" in column) and ("2" not in column and "H" not in column and "S" not in column and 'M' not in column):
+        elif ("CO" in column or "C0" in column) and "2" not in column:
             data_df.columns.values[i] = "CO (kg/kg)"
-        elif "H2" in column:
-            #some of the O were seen as 0, H2 to remove error
-            data_df.columns.values[i] = "H2O (kg/kg)"
-        elif "CARB" in column:
-            data_df.columns.values[i] ="H'carbs (kg/kg)"
-        elif "HCL" in column:
-            data_df.columns.values[i] = "HCl (kg/kg)"
-        elif "M-DUCT" in column:
-            if "MFR (kg/s)" not in data_df.columns.values:
-                data_df.columns.values[i] = "MFR (kg/s)"
-            else:
-                #some cases where have air flow (kg/s), M-duct listed with (m3/s) indicating volumetric flow
-                data_df.columns.values[i] = "V Duct (m3/s)"
-        elif "V-DUCT" in column: 
-            data_df.columns.values[i] = "V Duct (m3/s)"
-        elif "SOOT" in column:
-            data_df.columns.values[i] = "Soot (kg/kg)"
-        elif "AREA" in column and "SUM" not in column:
-            data_df.columns.values[i] = "Extinction Area (m2/kg)"
-        elif ("AREA" in column and "SUM" in column) or ("TOTALSMOKE" in str(column.replace(" ", ""))):
-            data_df.columns.values[i] = "Total Smoke (m2/kg)"
-        elif "SAMPTEMP" in str(column.replace(" ", "")):
-            data_df.columns.values[i] = "Sample Temperature (Deg C)"
+        elif "AIR" in column:
+            data_df.columns.values[i] = "Air/Sample (kg/kg)"
         else:
             msg = f'Illegal Column Detected: {column}'
             raise Exception(msg)
-        
-    
+
+
     # replacing "*" with NaN
     data_df = data_df.apply(lambda col: col.map(lambda x: np.nan if "*" in str(x) else x))
     data_df = data_df.apply(pd.to_numeric, errors = 'coerce').astype(float)
@@ -461,6 +561,7 @@ def parse_data(data_df,test,file_name):
             raise Exception(f"Column {c} exceeds the length of time in the test, please review markdown and pdf")
     return data_df, test_filename
 
+
 ####### metadata clean and output functions #######
 #region parse_metadata
 # clean and output metadata as json
@@ -468,8 +569,10 @@ def parse_metadata(input,test_name):
     meta_filename = test_name + ".json"
     meta_path = OUTPUT_DIR / meta_filename
     metadata_json = {}
-    metadata = []
-
+    metadata = None
+    comments = []
+    #First item in metadata being used to get info we can get, parse string, also add to comments incase something doesnt parse SmURF can fix
+    #all subsequent, mostly useless, appeneded to comments
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     # checking for existing test metadata file 
@@ -487,35 +590,17 @@ def parse_metadata(input,test_name):
                     oldname = metadata_json['Original Testname']
                     print(colorize(f'{oldname} was deemed bad on {metadata_json["Bad Data"]}. Skipping Preparsing','purple'))
                     return 'Bad'
-    for line in input:
-        # finds all space blocks separating potential metadata values
-        # assumes metadata blocks are separated by at least 3 whitespaces
-        match_whitespace = re.search("\\s{3,}", line)
-        match_semicolon = re.search(";", line)
-        while match_whitespace is not None or match_semicolon is not None:
-
-            # checks which match is closer to the beginning (grabs only 1 metadata block)
-            if match_whitespace is not None:
-                match = match_whitespace
-            else:
-                match = match_semicolon
-            if match_whitespace is not None and match_semicolon is not None:
-                if match_semicolon.start() < match_whitespace.start():
-                    match = match_semicolon
-                else: 
-                    match = match_semicolon
-
-            metadata.append(line[:match.start()])
-            # trims line up to end of last match
-            line = line[match.end():]
-            match_whitespace = re.search("\\s{3,}", line)
-            match_semicolon = re.search(";", line)
-        if line.strip() != "":
-            metadata.append(line)
+    for i,line in enumerate(input):
+        if i == 0:
+            metadata = line
+            comments.append(line)
+        elif (line.strip().replace('-', '').replace('|', '').replace(' ', '').replace(r'\n','') != ''):
+            comments.append(line)
 
     # metadata = list of metadata blocks as str
     #print(metadata)
 
+    
     ############ finding metadata fields ############
     expected_keys = [
     "Material ID",
@@ -599,65 +684,59 @@ def parse_metadata(input,test_name):
 
     for key in expected_keys:
         metadata_json.setdefault(key, None)
+    metadata_json["Comments"] = comments
+    orient_idx = None
+    slash_idx = None
+    if "HOR" in metadata:
+        orient_idx = metadata.find("HOR")
+        metadata_json["Orientation"] = "HORIZONTAL"
+    elif "VERT" in metadata:
+        orient_idx = metadata.find("VERT")
+        metadata_json["Orientation"] = "VERTICAL"
+    if orient_idx:
+        metadata_json["Material Name"] = metadata[:orient_idx-1]
     
-    metadata_json["Comments"] = []
-    metadata_json["Specimen Number"] = str(test_name).split("_")[0].split("t")[-1] # just the number
-    metadata_json["Material ID"] = None
-    for item in metadata:
-        if metadata.index(item) == 0:
-            name = item.split("(", 1)[0].strip()
-            metadata_json["Material Name"] = name
-        if "Heat Flux (kW/m2)" not in metadata_json:
-            match = None
-            if "KW/M2" in item:
-                match = re.search(r'(\d+\s*KW/M2)', item)
-                if match:
-                    substring = match.group(1)
-                else:
-                    # Alternative: get all characters (digits, possibly units and spaces) just before KW/M2
-                    match = re.search(r'([^\s]+(?:\s*KW/M2))', item)
-                    substring = match.group(1) if match else None
-                metadata_json["Heat Flux (kW/m2)"] = get_number(substring, "int")
-        if "Frame" in item or "HOLDER" in item:
-            metadata_json["Edge Frame"] = True
-        elif "HOR" in item:
-            metadata_json["Orientation"] = "HORIZONTAL"
-        elif "VERT" in item:
-            metadata_json["Orientation"] = "VERTICAL"
-        elif "MO" in item:
-            metadata_json["Sample Mass (g)"]= get_number(item,"flt")
-        elif "MF" in item:
-            metadata_json["Residual Mass (g)"] = get_number(item,"flt")
-        elif "TIGN" in item.replace(" ", ""):
-            metadata_json["t_ignition (s)"] = get_number(item,"int")
-        elif re.search(r'\s*\d+\s+(([A-Z]{3})|([A-Z]{4}))\s+\d{2}', item) is not None:
-            metadata_json["Test Date"] = str(item).strip()
-        if "PAGE" not in item and "---" not in item:
-            metadata_json["Comments"].append(item) 
+    date_testnum =re.search(r'(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})(?:-(\d{1,4}))?', metadata)
+    dateidx = date_testnum.start()
+    if date_testnum:     
+        metadata_json["Test Date"] = date_testnum.group(1)        
+        specnum =  date_testnum.group(2)             
+        metadata_json['Specimen Number'] = specnum
+    if "/M2" in metadata:
+        slash_idx = metadata.find("/M2")
+        flux_str = metadata[slash_idx - 6: slash_idx + 3]
+        metadata_json["Heat Flux (kW/m2)"] = get_number(flux_str,"int")
+    elif "/CM2" in metadata:
+        slash_idx = metadata.find("/CM2")
+        flux_str = metadata[slash_idx - 6: slash_idx + 3]
+        small_flux = get_number(flux_str, "flt")
+        metadata_json["Heat Flux (kW/m2)"] = int(small_flux * 10)
+    elif "0FLUX" or "NOEXTERNALFLUX" in metadata.replace(" ", ""):
+        slash_idx = metadata.find("UX")
+        metadata_json["Heat Flux (kW/m2)"] = 0
+    potential_mass_str =  metadata[slash_idx +4: dateidx]
+    mass = get_number(potential_mass_str, "flt")
+    if "FRAME" in metadata:
+        metadata_json["Edge Frame"] = True
+    if "GRID" in metadata:
+        metadata_json["Grid"] = True
+    if mass == None:
+        mass_match = re.search(r'\((\d+(?:\.\d+)?)', metadata[:orient_idx])
+        if mass_match:
+            mass = get_number(mass_match.group(1), "flt")
+    metadata_json["Sample Mass (g)"] = mass
         
 
     metadata_json['Original Testname'] = test_name
     metadata_json['Instrument'] = "NBS Cone Calorimeter"
     metadata_json['Preparsed'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    metadata_json["Original Source"] = "Box/md_B"
+    metadata_json["Original Source"] = "Box/md_C"
     metadata_json['Data Corrections'] =[]
-
     #update respective test metadata file
     with open(meta_path, "w", encoding="utf-8") as f:
-        f.write(json.dumps(metadata_json, indent=4))
+        f.write(json.dumps(metadata_json, indent=4)) 
     print(colorize(f"Generated {meta_path}", "blue"))
     return None
-    
-
-    # metadata table checker
-    # if line[0] == | then until not | at line[0] add to a table
-
-
-    # # Determine output path
-    # Path(OUTPUT_DIR_JSON / str(test_year)).mkdir(parents=True, exist_ok=True)
-
-    # data_output_path = Path(OUTPUT_DIR_JSON) / str(test_year) /f"{Path(file_path).stem}.csv"
-    # metadata_output_path = Path(OUTPUT_DIR_JSON) / str(test_year) / f"{Path(file_path).stem}.json"
 
 #region helpers
 #get number(int,float,exponent,)
@@ -689,10 +768,8 @@ def get_field(item):
 #region main
 if __name__ == "__main__":
     # write new log file at every run
-    LOG_DIR = Path(r"../logs/")
-    LOG_DIR.mkdir(parents=True, exist_ok=True)
     logfile = {}
     with open(LOG_FILE, "w", encoding="utf-8") as f:
         f.write(json.dumps(logfile, indent=4))
-    print("✅ preparse_md_B_log.json created.")
+    print("✅ preparse_md_C_log.json created.")
     parse_dir(INPUT_DIR)

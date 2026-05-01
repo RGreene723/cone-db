@@ -12,13 +12,16 @@ import traceback
 import shutil
 from utils import calculate_HRR, calculate_MFR, colorize
 
+
+
+#HANDLING NEW MD_B FORMAT: FOR NEW LLAMMA'D FILES
 #Path Handling: Relative to this script's location
 SCRIPT_DIR = Path(__file__).resolve().parent         # .../coneDB/scripts
 PROJECT_ROOT = SCRIPT_DIR.parent             # .../coneDB 
 
-INPUT_DIR = PROJECT_ROOT / "data" / "raw" / "Box" / "md_B"### WILL BE FIREDATA IN BOX SUBFOLDER, (firedata/flammabilitydata/cone/Box/md_B)
-OUTPUT_DIR = PROJECT_ROOT / "data" / "preparsed" / "Box" / "md_B"
-LOG_FILE = PROJECT_ROOT / "preparse_md_B_log.json"
+INPUT_DIR = PROJECT_ROOT / "data" / "raw" / "Box" / "md_A_new"### WILL BE FIREDATA IN BOX SUBFOLDER, (firedata/flammabilitydata/cone/Box/md_A_new)
+OUTPUT_DIR = PROJECT_ROOT / "data" / "preparsed" / "Box" / "md_A"
+LOG_FILE = PROJECT_ROOT / "preparse_md_A_2_log.json"
 
 
 
@@ -167,300 +170,316 @@ def parse_file(file_path):
    
 
 ####### separate tests in file #######
-#region get_tests
-# splits file in list of tests, stores as {tests} <key=test_number>
+#region get_tests - MODIFIED FOR NEW FORMAT
 def get_tests(file_contents):
+    """
+    Splits file into list of tests by identifying test headers with format:
+    MATERIAL NAME (TYPE) HeatFlux KW/M2 ORIENTATION. (TestNumber)
+    """
     test_number = -1
     tests = {}
-    first_inst = False
-    for i in range(len(file_contents) - 2):
+    
+    for i in range(len(file_contents)):
         line = str(file_contents[i]).upper().strip()
-        test_match = re.search(r"\((\d{3,4})\)", line)
+        
+        # Pattern: anything (###) at end of line = test number and allow for versions of same test number
+        test_match = re.search(r"\((\d{3,4}[a-zA-Z]?)\)\s*$", line)
+        
         if test_match is not None:
             raw = test_match.group(1)
-            # Check next 10 lines until hit a break criterion
-            for j in range(1, 11):  # lines i+1 to i+10
-                idx = i + j
-                if idx >= len(file_contents):
-                    break
-                line_after = file_contents[idx].upper().strip()
-                if "MAX" in line_after or "PARAMETER" in line_after:
-                    test_number = f"Test {raw.zfill(4)}"
-                    break
-                elif  "PAGE" in line_after or ";" in line_after:
-                    break
-
-
-
-            ''''
-            line_after_two = file_contents[i + 2].upper().strip()
-            max_test = re.search(r"MAX", line_after_two)
-            param_test = re.search(r"PARAMETER", line_after_two)
-            raw = test_match.group(1)
-            # ensure this is a new test
-            if (max_test is not None) or (param_test is not None):
-                test_number = f"Test {raw.zfill(4)}"
-                # print(f"Match on line {i}: {line}")
-            #if not a new test make sure the same number
-            elif f"Test {raw.zfill(4)}" != test_number:
-                raise Exception("Likley typo in test numbers exist, please correct the markdown file.")
-            '''''
-        # adding lines to respective test/key
+            test_number = f"Test {raw.zfill(4)}"
+            
+            # Initialize new test
+            if test_number not in tests:
+                tests[test_number] = []
+        
+        # Add line to current test if one has been identified
         if test_number != -1:
-            if test_number in tests:
-                tests[test_number].append(line)
-            else:
-                tests[test_number] = [line]
-
-    # add skipped last two lines to the last detected test
-    tests[test_number].append(str(file_contents[len(file_contents) - 2]).upper().strip())
-    tests[test_number].append(str(file_contents[len(file_contents) - 1]).upper().strip())
-
-    print(tests.keys())
-
-    return tests    
+            tests[test_number].append(line)
+    
+    print(colorize(f"Found {len(tests)} tests: {list(tests.keys())}", "cyan"))
+    return tests
     
 
 ####### separate metadata from test data #######
-#region get_data
-#region get_data
+#region get_data - MODIFIED FOR NEW FORMAT
 def get_data(data):
-    # data  = list of lines (test)
-    
+    """
+    Separates metadata from tabular data.
+    New format has multiple markdown tables stacked vertically.
+    We need to identify each table separately and merge them horizontally.
+    """
     dataStart = -1
-    dataEnd = -1
-    index = 0
-    #has_page = False
+    metadata = []
+    table_blocks = []  # List of separate table blocks
+    current_table = []
+    
     for i, line in enumerate(data):
-        line = str(line.upper())
-        time_index = line.find("TIME")
-        # if "times"
-        if ("TIMES" in line):
+        line_upper = str(line).upper().strip()
+        
+        # Check if this is a table header row (contains TIME and |)
+        if "TIME" in line_upper and "|" in line and "MAX" not in line_upper and "PARAMETER" not in line_upper:
             if dataStart == -1:
-                 dataStart = index
-            #has_page = True
-        # if "time |"
-        elif (time_index != -1):
-            # check if | in vicinity
-            max_test = re.search(r"MAX", line)
-            param_test = re.search(r"PARAMETER", line)
-            for i in range(1,10):
-                if (time_index+i < len(line)) and str(line[time_index+i]) == "|" and (max_test is None) and (param_test is None):
-                    if dataStart == -1:
-                        dataStart = index
-                    #has_page = True
-                    break                    
+                dataStart = i
+            # If we have a previous table, save it
+            if current_table:
+                table_blocks.append(current_table)
+                current_table = []
+            # Start new table
+            current_table.append(line)
+        elif dataStart != -1:
+            # We're in the data section
+            current_table.append(line)
+        else:
+            # Metadata
+            metadata.append(line)
     
-        index += 1
-
-    test_data = data[dataStart:]
-    filtered_test_data = []
+    # Don't forget the last table
+    if current_table:
+        table_blocks.append(current_table)
     
-    for line in test_data:
-        if any(bad in line for bad in ('TEST', 'PAGE', 'HOR', 'VERT', "MO=", "MF=", "IGN")):
-            continue
-        # Remove markdown delimiter rows like |---|---|---|...| or just ---... or lines with only pipes/spaces/hyphens
-        if (line.strip().replace('-', '').replace('|', '').replace(' ', '') == '') \
-           and ('-' in line or '|' in line):
-            continue
-        #Remove only unit rows
-        if any(unit in line for unit in ("S", "SEC","KG","M2","M3","KW","KJ")) and not any(header in line for header in ("TIME","DOT", "H", "SUM", "MASS","CO", "AREA", "DUCT")):
-            continue
-        # Optionally: remove lines that are only spaces
-        if not line.strip():
-            continue
-        filtered_test_data.append(line)
-    #for i, row in enumerate(filtered_test_data):
-     #   print(f"ROW {i} ({len(row.split('|'))} cols):", row)
-
-
-    #print(f"{dataStart} to {dataEnd}")
-    metadata = data[:dataStart] + data[dataEnd:]
-    print(f"Data Table from {dataStart} to {dataEnd}")
+    print(colorize(f"Found {len(table_blocks)} table blocks", "cyan"))
     
-    # convert test_data to df
-    pd_format_test_data = StringIO("\n".join(test_data))
-    test_data_df = pd.read_csv(pd_format_test_data, sep="|")
-
+    # Process each table block separately
+    dfs = []
+    for idx, table_block in enumerate(table_blocks):
+        print(colorize(f"Processing table block {idx + 1}...", "yellow"))
+        
+        # Filter out markdown formatting rows
+        filtered_table = []
+        for line in table_block:
+            # Skip separator rows (lines with only |, -, and spaces)
+            if line.strip().replace('-', '').replace('|', '').replace(' ', '') == '':
+                continue
+            # Skip empty lines
+            if not line.strip():
+                continue
+            filtered_table.append(line)
+        
+        # Convert to pandas DataFrame
+        try:
+            pd_format_test_data = StringIO("\n".join(filtered_table))
+            block_df = pd.read_csv(pd_format_test_data, sep="|")
+            # Remove leading/trailing empty columns (from | delimiters)
+            block_df = block_df.iloc[:, 1:-1]
+            dfs.append(block_df)
+            print(colorize(f"Table {idx + 1}: {block_df.shape[0]} rows, {block_df.shape[1]} columns", "blue"))
+        except Exception as e:
+            print(colorize(f"Error parsing table block {idx + 1}: {e}", "red"))
+            raise
+    
+    # Merge all tables horizontally (by row index)
+    if dfs:
+        test_data_df = pd.concat(dfs, axis=1)
+    else:
+        raise Exception("No tables found in data")
+    
+    print(colorize(f"Final merged table: {test_data_df.shape[0]} rows, {test_data_df.shape[1]} columns", "green"))
+    
     return test_data_df, metadata
 
 # outputting dataframe to csv file
-#region parse_data
-def parse_data(data_df,test,file_name):
-    data_df = data_df.iloc[:, 1:-1]
+#region get_data - MODIFIED FOR NEW FORMAT
+def get_data(data):
+    """
+    Separates metadata from tabular data.
+    Groups tables by column set, concatenates within groups, merges between groups by TIME.
+    """
+    dataStart = -1
+    metadata = []
+    table_blocks = []
+    current_table = []
     
-
-    # extract indices of separate datatables
-    new_table_start = 0
-    col_idx = data_df.columns[0]
-    table_idx_list = []
-    for index,row in data_df.iterrows():
-        # new table starting where time is 0 again
-        if (index != 1) and (str(row[col_idx]).strip() == '0.'):
-            # find column header row
-            for i in range(1,5):
-                first_col_cell = str(data_df.iloc[index-i,0])
-                if "T" in first_col_cell.upper():
-                    new_table_start = index-i
-                    table_idx_list.append(index-i)
-                    break
-
-    for idx in range(len(table_idx_list)):
-        # save new datatable as df
-        if idx == (len(table_idx_list)-1):
-            new_table = data_df.iloc[table_idx_list[idx]:,1:]
-        else:
-            new_table = data_df.iloc[table_idx_list[idx]:table_idx_list[idx+1],1:]
-        # transform new table into additional columns
-        for col in new_table.columns:
-            #skip first row
-            if pd.notna(new_table.iloc[0][col]):
-                new_col_name = str(new_table.iloc[0][col]).strip()
-                #init new column and fill
-                data_df[new_col_name] = np.nan
-                data_df[new_col_name] = data_df[new_col_name].astype("object")  # make string-compatible
-                data_df.loc[0:(len(new_table)-2),new_col_name] = new_table.iloc[1:][col].values 
-
-    # remove new table(s) at original location
-    data_df.iloc[table_idx_list[0]:,:] = np.nan
-    print('-------------------------------------------------------')
-    df = data_df.copy()
-    query = 'AREA'
-    mask = df.apply(lambda row: row.astype(str).str.contains(query, case=False, na=False).any(), axis=1)
-    matching_rows = df[mask]
-    #print(matching_rows)   
-    #print(df[110:150])
-    print('-------------------------------------------------------------------')
-    def delete_cells(col):
-        # Convert to string, strip whitespace
-        col_stripped = col.astype(str).str.strip()
-
-        # Define mask for valid (non-empty) values
-        is_not_empty = col.notna() & ~col_stripped.isin(['', '-', ' - '])
-
-        #Exclude any cells containing letters
-        has_letters = col.astype(str).str.contains(r'[a-zA-Z]', na=False)
-
-        # Exclude values with more than 2 dashes
-        too_many_dashes = col_stripped.str.count('-') > 2
-
-        # Final mask: valid and not full of dashes
-        mask = is_not_empty & ~too_many_dashes & ~has_letters
-
-        # Filter and shift
-        non_empty = col[mask]
-        n_missing = len(col) - len(non_empty)
-        return pd.Series(list(non_empty) + [np.nan]*n_missing, index=col.index)
-
-    # remove all miscellaneous cells
-    data_df = data_df.apply(delete_cells)
-    print(data_df.columns)
-    # remove unnecessary headers
-    # data_df = data_df[~data_df.astype(str).apply(lambda row: row.str.contains("TIME", case=False, na=False).any(), axis=1)]
-
-    '''
-    # detect every header
-    col_idx = data_df.columns[1]
-    prev = data_df.columns[1]
-    for index,row in data_df.iterrows():
-        if any('TIME' in str(cell) for cell in row) and column_head != row[col_idx]:
-    '''
-
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
-    #generate test data csv name
-    test_name = test.casefold()
-    test_name = test_name.replace(" ", "")
-    test_filename = test_name + "_" + file_name[0:8:1]
-    test_name = f"{test_filename}.csv"
-
-    #generating contents for md_A_log
-    with open(LOG_FILE, "r", encoding="utf-8") as w:  
-        logfile = json.load(w)
-
-    # checking validity of data parsing
-    data_df_cols = data_df.iloc[:,:-1]
-    column_counts = data_df_cols.count()
-    if column_counts.nunique() != 1:
-        column_uniform = "Datatable columns are not uniform"
-    else:
-        column_uniform = "Datatable columns are uniform"
-    # update md_A_log based off uniformity of columns
-    #logfile.update({
-   #         str(test_name) : f"{column_uniform} || #Col = {data_df.shape[1]}"
-    #    })
-
-
-     #Renaming Column Headers
-    for i, column in enumerate(data_df.columns):
-        if "TIME" in column:
-            data_df.columns.values[i] = "Time (s)"
-        elif "DOT" in column:
-            data_df.columns.values[i] = "HRRPUA (kW/m2)"
-        elif "SUM Q" in column:
-            data_df.columns.values[i] = "THRPUA (MJ/m2)"
-        elif "MASS" in column and "LOSS" not in column:
-            data_df.columns.values[i] = "Mass (g)"
-        elif "M" in column and "LOSS" in column:
-            data_df.columns.values[i] = "MLR (g/s)"
-        elif "AIR" in  column:
-            data_df.columns.values[i] = "MFR (kg/s))"
-        elif "H" in column and "COM" in column:
-            data_df.columns.values[i] = "HT Comb (MJ/kg)"
-        elif "CO2" in column or "C02" in column:
-            data_df.columns.values[i] = "CO2 (kg/kg)"
-        elif ("CO" in column or "C0" in column) and ("2" not in column and "H" not in column and "S" not in column and 'M' not in column):
-            data_df.columns.values[i] = "CO (kg/kg)"
-        elif "H2" in column:
-            #some of the O were seen as 0, H2 to remove error
-            data_df.columns.values[i] = "H2O (kg/kg)"
-        elif "CARB" in column:
-            data_df.columns.values[i] ="H'carbs (kg/kg)"
-        elif "HCL" in column:
-            data_df.columns.values[i] = "HCl (kg/kg)"
-        elif "M-DUCT" in column:
-            if "MFR (kg/s)" not in data_df.columns.values:
-                data_df.columns.values[i] = "MFR (kg/s)"
-            else:
-                #some cases where have air flow (kg/s), M-duct listed with (m3/s) indicating volumetric flow
-                data_df.columns.values[i] = "V Duct (m3/s)"
-        elif "V-DUCT" in column: 
-            data_df.columns.values[i] = "V Duct (m3/s)"
-        elif "SOOT" in column:
-            data_df.columns.values[i] = "Soot (kg/kg)"
-        elif "AREA" in column and "SUM" not in column:
-            data_df.columns.values[i] = "Extinction Area (m2/kg)"
-        elif ("AREA" in column and "SUM" in column) or ("TOTALSMOKE" in str(column.replace(" ", ""))):
-            data_df.columns.values[i] = "Total Smoke (m2/kg)"
-        elif "SAMPTEMP" in str(column.replace(" ", "")):
-            data_df.columns.values[i] = "Sample Temperature (Deg C)"
-        else:
-            msg = f'Illegal Column Detected: {column}'
-            raise Exception(msg)
+    for i, line in enumerate(data):
+        line_upper = str(line).upper().strip()
         
+        if "TIME" in line_upper and "|" in line and "MAX" not in line_upper:
+            if dataStart == -1:
+                dataStart = i
+            if current_table:
+                table_blocks.append(current_table)
+                current_table = []
+            current_table.append(line)
+        elif dataStart != -1:
+            current_table.append(line)
+        else:
+            metadata.append(line)
     
-    # replacing "*" with NaN
-    data_df = data_df.apply(lambda col: col.map(lambda x: np.nan if "*" in str(x) else x))
-    data_df = data_df.apply(pd.to_numeric, errors = 'coerce').astype(float)
-    data_df.columns = data_df.columns.astype(str) # make all column headers strings
+    if current_table:
+        table_blocks.append(current_table)
     
-    last_time = data_df['Time (s)'].last_valid_index()
-    times =data_df['Time (s)'].loc[:last_time].values
-    start_0 = np.isclose(times[0], 0)
-    if not start_0:
-        raise Exception(f"Test does not start at 0 seconds, please review markdown and pdf")
-    increments = np.diff(times)
-    expected_step = np.median(increments)
-    #steps continous equal continue changing by the same amount appx (allow for single skip ie times 2) or slight less
-    continuous = np.all((increments >= expected_step *.1) & (increments <= expected_step *5))
-    if not continuous:
-        raise Exception("Test does not have continuous time data, please review markdown and pdf")
-    for c in data_df.columns:
-        data = data_df[c].loc[:data_df[c].last_valid_index()].values
-        if len(data) > len(times):
-            raise Exception(f"Column {c} exceeds the length of time in the test, please review markdown and pdf")
-    return data_df, test_filename
+    print(colorize(f"Found {len(table_blocks)} table blocks", "cyan"))
+    
+    # Process each table block separately
+    dfs = []
+    for idx, table_block in enumerate(table_blocks):
+        print(colorize(f"Processing table block {idx + 1}...", "yellow"))
+        
+        filtered_table = []
+        for line in table_block:
+            if line.strip().replace('-', '').replace('|', '').replace(' ', '') == '':
+                continue
+            if not line.strip():
+                continue
+            filtered_table.append(line)
+        
+        try:
+            pd_format_test_data = StringIO("\n".join(filtered_table))
+            block_df = pd.read_csv(pd_format_test_data, sep="|")
+            block_df = block_df.iloc[:, 1:-1]
+            dfs.append(block_df)
+            print(colorize(f"Table {idx + 1}: {block_df.shape[0]} rows, {block_df.shape[1]} columns", "blue"))
+        except Exception as e:
+            print(colorize(f"Error parsing table block {idx + 1}: {e}", "red"))
+            raise
+    
+    if dfs:
+        # Normalize column names in each table
+        for table in dfs:
+            for col in table.columns:
+                if "TIME" in col.upper():
+                    table.rename(columns={col: "Time (s)"}, inplace=True)
+                elif "Q-DOT" in col.upper():
+                    table.rename(columns={col: "HRRPUA (kW/m2)"}, inplace=True)
+                elif "SUM Q" in col.upper():
+                    table.rename(columns={col: "THRPUA (MJ/m2)"}, inplace=True)
+                elif "M-DOT" in col.upper():
+                    table.rename(columns={col: "MLRPUA (g/s-m2)"}, inplace=True)
+                elif "MASS" in col.upper() and "LOSS" in col.upper():
+                    if "MLRPUA (g/s-m2)" not in table.columns.values:
+                        table.rename(columns={col: "MLRPUA (g/s-m2)"}, inplace=True)
+                        #some tests (ex 2227) have m-dot labled as mass loss, no cumulative mass loss stored so this should correct
+                        #if this becomes an issue (Mass loss listed before MLR) can switch to check if monotonically inc
+                    else:
+                        table.rename(columns={col: "Mass Loss (kg/m2)"}, inplace=True)
+                elif "H" in col.upper() and ("COM" in col.upper() or "CON" in col.upper()):
+                    table.rename(columns={col: "HT Comb (MJ/kg)"}, inplace=True)
+                elif "CO2" in col.upper() or "C02" in col.upper():
+                    table.rename(columns={col: "CO2 (kg/kg)"}, inplace=True)
+                elif ("CO" in col.upper() or "C0" in col.upper()) and ("2" not in col.upper() and "H" not in col.upper() and "S" not in col.upper() and 'M' not in col.upper()):
+                    table.rename(columns={col: "CO (kg/kg)"}, inplace=True)
+                elif "H2" in col.upper():
+                    table.rename(columns={col: "H2O (kg/kg)"}, inplace=True)
+                elif "CARB" in col.upper() or "CARS" in col.upper() or "CARD" in col.upper():
+                    table.rename(columns={col: "H'carbs (kg/kg)"}, inplace=True)
+                elif "HCL" in col.upper():
+                    table.rename(columns={col: "HCl (kg/kg)"}, inplace=True)
+                elif "EX AREA" in col.upper():
+                    table.rename(columns={col: "Extinction Area (m2/g)"}, inplace=True)
+                elif "EPSILON" in col.upper():
+                    if "Epsilon One (kg/kg)" not in table.columns.values:
+                        table.rename(columns={col: "Epsilon One (kg/kg)"}, inplace=True)
+                    else:
+                        table.rename(columns={col: "Epsilon Two (kg/kg)"}, inplace=True)
+                elif "TEOM" in col.upper(): 
+                    table.rename(columns={col: "TEOM (g/s)"}, inplace=True)
+                elif "KS" in str(col.replace(" ", "")):
+                    table.rename(columns={col: "Mass Smoke Extinction Area (m2/g)"}, inplace=True)
+                elif "EXTCOEFF" in col.upper():
+                    table.rename(columns={col: "K Smoke (1/m)"}, inplace=True)
+                else:
+                    msg = f'Illegal Column Detected: {col}'
+                    raise Exception(msg)
+        
+        # Group tables by column set
+        column_groups = {}
+        for idx, df in enumerate(dfs):
+            col_key = tuple(sorted(df.columns))
+            if col_key not in column_groups:
+                column_groups[col_key] = []
+            column_groups[col_key].append((idx, df))
+        
+        print(colorize(f"Grouped into {len(column_groups)} column groups", "cyan"))
+        
+        # Concatenate within each group (drop header rows from continuation tables)
+        merged_groups = []
+        for group_idx, (col_key, group) in enumerate(column_groups.items()):
+            print(colorize(f"Merging column group {group_idx + 1} ({len(group)} tables)...", "yellow"))
+            
+            # Start with first table in group
+            merged_group = group[0][1].copy()
+            
+            # Concatenate remaining tables in group vertically (drop first row which is header)
+            for table_idx in range(1, len(group)):
+                table = group[table_idx][1].copy()
+                table = table.iloc[1:].reset_index(drop=True)  # Drop header row
+                merged_group = pd.concat([merged_group, table], axis=0, ignore_index=True)
+            
+            merged_groups.append(merged_group)
+            print(colorize(f"Group {group_idx + 1}: {merged_group.shape[0]} rows, {merged_group.shape[1]} columns", "green"))
+        
+        # Merge between groups horizontally by TIME
+        print(colorize(f"Merging {len(merged_groups)} groups horizontally by TIME...", "yellow"))
+        
+        test_data_df = merged_groups[0].copy()
+        
+        for group_idx in range(1, len(merged_groups)):
+            group_df = merged_groups[group_idx].copy()
+            
+            # Get non-TIME columns from group_df
+            group_data_cols = [c for c in group_df.columns if c != "Time (s)"]
+            
+            # Merge on TIME
+            test_data_df = pd.merge(
+                test_data_df,
+                group_df[["Time (s)"] + group_data_cols],
+                on="Time (s)",
+                how="outer",
+                suffixes=('', f'_group{group_idx+1}')
+            )
+            
+            print(colorize(f"After merging group {group_idx + 1}: {test_data_df.shape[0]} rows, {test_data_df.shape[1]} columns", "green"))
+        
+        print(colorize(f"Final merged table: {test_data_df.shape[0]} rows, {test_data_df.shape[1]} columns", "green"))
+        print(colorize(f"Final columns: {list(test_data_df.columns)}", "green"))
+        
+        return test_data_df, metadata
+    else:
+        raise Exception("No tables found in data")
 
+
+def parse_data(data_df, test, file_name):
+    """
+    Minimal cleaning: remove header rows, convert to numeric, export.
+    """
+    
+    # Remove any header rows that got parsed as data
+    def is_header_row(row):
+        """Check if a row contains only header text/units"""
+        header_keywords = ['TIME', 'S', 'KW/M2', 'MJ/M2', 'MJ/KG', 'GRAMS', 'G/S', 
+                          'KG/KG', 'KG/S', 'M3/S', 'M2/KG', 'DOT', 'DUCT', 'AREA', 'SOOT', 'CARB', 'HCL']
+        
+        cell_count = 0
+        header_count = 0
+        for cell in row:
+            cell_str = str(cell).upper().strip()
+            if cell_str and cell_str != 'nan':
+                cell_count += 1
+                if any(kw in cell_str for kw in header_keywords):
+                    header_count += 1
+        
+        return cell_count > 0 and (header_count / cell_count > 0.5)
+    
+    data_df = data_df[~data_df.apply(is_header_row, axis=1)]
+    data_df = data_df.reset_index(drop=True)
+    
+    # Clean cell values: remove asterisks and dashes, convert to numeric
+    def clean_cells(col):
+        col_stripped = col.astype(str).str.strip()
+        col_cleaned = col_stripped.apply(lambda x: np.nan if ("*" in str(x) or str(x).strip() == '-') else x)
+        return pd.to_numeric(col_cleaned, errors='coerce')
+    
+    data_df = data_df.apply(clean_cells)
+    
+    # Generate test filename
+    test_name = test.casefold().replace(" ", "")
+    test_filename = test_name + "_" + file_name[0:8]
+    
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    
+    print(colorize(f"Final columns: {list(data_df.columns)}", "green"))
+    
+    return data_df, test_filename
 ####### metadata clean and output functions #######
 #region parse_metadata
 # clean and output metadata as json
@@ -553,7 +572,6 @@ def parse_metadata(input,test_name):
     "Surface Area (m2)",
     "Grid",
     "Edge Frame",
-    "Ignition Source",
     "Separation (mm)",
     "Test Start Time (s)",
     "Test End Time (s)",
@@ -618,8 +636,6 @@ def parse_metadata(input,test_name):
                     match = re.search(r'([^\s]+(?:\s*KW/M2))', item)
                     substring = match.group(1) if match else None
                 metadata_json["Heat Flux (kW/m2)"] = get_number(substring, "int")
-        if "Frame" in item or "HOLDER" in item:
-            metadata_json["Edge Frame"] = True
         elif "HOR" in item:
             metadata_json["Orientation"] = "HORIZONTAL"
         elif "VERT" in item:
